@@ -21,6 +21,8 @@
 		486EDF6A1F9720DE005D49C2 /* Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF681F9720DD005D49C2 /* Interface.swift */; };
 		486EDF6B1F9720DE005D49C2 /* WordInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF691F9720DD005D49C2 /* WordInterface.swift */; };
 		486EDF6D1F972189005D49C2 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF6C1F972189005D49C2 /* RequestManager.swift */; };
+		486EDF761F973A7B005D49C2 /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF751F973A7B005D49C2 /* MainPageViewController.swift */; };
+		486EDF781F973AC6005D49C2 /* PageContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF771F973AC6005D49C2 /* PageContentViewController.swift */; };
 		4878156B1F947F4C00873D9F /* WordRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4878156A1F947F4C00873D9F /* WordRequest.swift */; };
 		4878156D1F9483A300873D9F /* Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4878156C1F9483A300873D9F /* Interface.swift */; };
 		4878156F1F948C2600873D9F /* WordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4878156E1F948C2600873D9F /* WordModel.swift */; };
@@ -137,6 +139,8 @@
 		486EDF681F9720DD005D49C2 /* Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interface.swift; sourceTree = "<group>"; };
 		486EDF691F9720DD005D49C2 /* WordInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordInterface.swift; sourceTree = "<group>"; };
 		486EDF6C1F972189005D49C2 /* RequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
+		486EDF751F973A7B005D49C2 /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
+		486EDF771F973AC6005D49C2 /* PageContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageContentViewController.swift; sourceTree = "<group>"; };
 		4878156A1F947F4C00873D9F /* WordRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRequest.swift; sourceTree = "<group>"; };
 		4878156C1F9483A300873D9F /* Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interface.swift; sourceTree = "<group>"; };
 		4878156E1F948C2600873D9F /* WordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordModel.swift; sourceTree = "<group>"; };
@@ -237,13 +241,13 @@
 		481E62C91F95FFE200D74899 /* Word Share */ = {
 			isa = PBXGroup;
 			children = (
+				486EDF6F1F97302E005D49C2 /* Extensions */,
+				486EDF721F973065005D49C2 /* Models */,
 				486EDF5D1F971569005D49C2 /* Network */,
 				481E62DA1F960DD000D74899 /* Word Share.entitlements */,
-				481E62CA1F95FFE200D74899 /* ShareViewController.swift */,
-				481E62CC1F95FFE200D74899 /* MainInterface.storyboard */,
+				486EDF731F973093005D49C2 /* Controllers */,
+				486EDF741F9730D8005D49C2 /* StoryboardsAndXIBs */,
 				481E62CF1F95FFE200D74899 /* Info.plist */,
-				481E62DB1F961E6D00D74899 /* EntryViewController.swift */,
-				481E62D71F96081600D74899 /* MainViewController.swift */,
 			);
 			path = "Word Share";
 			sourceTree = "<group>";
@@ -252,15 +256,73 @@
 			isa = PBXGroup;
 			children = (
 				486EDF5E1F9715D3005D49C2 /* NetworkAPIClient.swift */,
-				486EDF6C1F972189005D49C2 /* RequestManager.swift */,
-				486EDF621F97200B005D49C2 /* Constants.swift */,
-				486EDF651F97204F005D49C2 /* Request.swift */,
-				486EDF641F97204E005D49C2 /* WordRequest.swift */,
-				486EDF681F9720DD005D49C2 /* Interface.swift */,
-				486EDF691F9720DD005D49C2 /* WordInterface.swift */,
-				486EDF601F971FE9005D49C2 /* WordModel.swift */,
+				486EDF6E1F973018005D49C2 /* APIManagers */,
+				486EDF701F97303D005D49C2 /* Requests */,
+				486EDF711F97304C005D49C2 /* Services */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		486EDF6E1F973018005D49C2 /* APIManagers */ = {
+			isa = PBXGroup;
+			children = (
+				486EDF6C1F972189005D49C2 /* RequestManager.swift */,
+			);
+			path = APIManagers;
+			sourceTree = "<group>";
+		};
+		486EDF6F1F97302E005D49C2 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				486EDF621F97200B005D49C2 /* Constants.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		486EDF701F97303D005D49C2 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				486EDF651F97204F005D49C2 /* Request.swift */,
+				486EDF641F97204E005D49C2 /* WordRequest.swift */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
+		486EDF711F97304C005D49C2 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				486EDF681F9720DD005D49C2 /* Interface.swift */,
+				486EDF691F9720DD005D49C2 /* WordInterface.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		486EDF721F973065005D49C2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				486EDF601F971FE9005D49C2 /* WordModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		486EDF731F973093005D49C2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				481E62CA1F95FFE200D74899 /* ShareViewController.swift */,
+				481E62DB1F961E6D00D74899 /* EntryViewController.swift */,
+				481E62D71F96081600D74899 /* MainViewController.swift */,
+				486EDF751F973A7B005D49C2 /* MainPageViewController.swift */,
+				486EDF771F973AC6005D49C2 /* PageContentViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		486EDF741F9730D8005D49C2 /* StoryboardsAndXIBs */ = {
+			isa = PBXGroup;
+			children = (
+				481E62CC1F95FFE200D74899 /* MainInterface.storyboard */,
+			);
+			path = StoryboardsAndXIBs;
 			sourceTree = "<group>";
 		};
 		53E5F7B68AE7AF0D47CFF920 /* Pods */ = {
@@ -735,10 +797,12 @@
 				486EDF6B1F9720DE005D49C2 /* WordInterface.swift in Sources */,
 				486EDF671F97204F005D49C2 /* Request.swift in Sources */,
 				481E62CB1F95FFE200D74899 /* ShareViewController.swift in Sources */,
+				486EDF761F973A7B005D49C2 /* MainPageViewController.swift in Sources */,
 				486EDF661F97204F005D49C2 /* WordRequest.swift in Sources */,
 				481E62D81F96081600D74899 /* MainViewController.swift in Sources */,
 				481E62DC1F961E6E00D74899 /* EntryViewController.swift in Sources */,
 				486EDF6D1F972189005D49C2 /* RequestManager.swift in Sources */,
+				486EDF781F973AC6005D49C2 /* PageContentViewController.swift in Sources */,
 				486EDF611F971FE9005D49C2 /* WordModel.swift in Sources */,
 				486EDF631F97200B005D49C2 /* Constants.swift in Sources */,
 				486EDF6A1F9720DE005D49C2 /* Interface.swift in Sources */,

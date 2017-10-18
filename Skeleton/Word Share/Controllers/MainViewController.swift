@@ -16,7 +16,6 @@ protocol MainViewControllerDelegate: class {
 
 class MainViewController: UIViewController {
     var shareWord:String? = nil
-    var word:WordModel? = nil
     weak var delegate: MainViewControllerDelegate?
     
     private lazy var tableView: UITableView = {
@@ -30,8 +29,8 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
         setupShareWord()
+        //view.addSubview(tableView)
     }
     
     private func setupShareWord(){
@@ -51,40 +50,7 @@ class MainViewController: UIViewController {
         }
     }
     
-    private func performAPICall(){
-        RequestManager().getWordInformation(word: self.shareWord!, wordInfoType: .definitions) { (success, response) in
-            print(response ?? Constants.kErrorMessage)
-            if let word = response as! WordModel?{
-                self.word = word
-            }
-        }
-    }
-    
-    @objc func saveButtonTapped(sender: UIBarButtonItem) {
-        self.hideExtensionWithCompletionHandler(completion: { (Bool) -> Void in
-            self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
-        })
-    }
-    
-    func cancelButtonTapped(sender: UIBarButtonItem) {
-        self.hideExtensionWithCompletionHandler(completion: { (Bool) -> Void in
-            self.extensionContext!.cancelRequest(withError: NSError())
-        })
-    }
-    
-    func hideExtensionWithCompletionHandler(completion:@escaping (Bool) -> Void) {
-        UIView.animate(withDuration: 0.20, animations: {
-            
-            self.navigationController!.view.transform = CGAffineTransform(translationX: 0, y: self.navigationController!.view.frame.size.height)
-        }, completion: completion)
-    }
-    private func setupUI() {
-        self.view.backgroundColor = UIColor.white
-        self.navigationItem.title = "Word Power"
-        navigationController?.navigationBar.backgroundColor = UIColor.red//(red:0.97, green:0.44, blue:0.12, alpha:1.00)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainViewController.saveButtonTapped(sender:)))
-        view.addSubview(tableView)
-    }
+     func performAPICall(){}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

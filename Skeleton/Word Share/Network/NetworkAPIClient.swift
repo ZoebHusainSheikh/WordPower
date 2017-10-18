@@ -41,7 +41,7 @@ class NetworkAPIClient: NSObject {
     
     private func clientURLRequest(path: String, params: Dictionary<String, AnyObject>? = nil) -> NSMutableURLRequest {
         let request = NSMutableURLRequest(url: NSURL(string: "https://wordsapiv1.p.mashape.com/words/"+path)! as URL)
-        request.setValue("gffsVZbssi52omsh52gxrT335Shh8aNp128WjajsnahxEMl6530yo", forHTTPHeaderField: "X-Mashape-Key")
+        request.setValue("gffsVZi52omsh52gxrT335Shh8aNp128WjajsnahxEMl6530yo", forHTTPHeaderField: "X-Mashape-Key")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         /*if let params = params {
          var paramString = ""

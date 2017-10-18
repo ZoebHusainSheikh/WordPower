@@ -13,7 +13,8 @@ import UIKit
 class EntryViewController : UINavigationController {
     
      init() {
-        super.init(rootViewController: MainViewController())
+        let viewController:UIViewController = UIStoryboard(name: "MainInterface", bundle: nil).instantiateViewController(withIdentifier: "MainPageViewController") as UIViewController
+        super.init(rootViewController: viewController)
     }
 
     required init(coder aDecoder: NSCoder) {

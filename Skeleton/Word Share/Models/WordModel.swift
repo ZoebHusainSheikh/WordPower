@@ -38,4 +38,5 @@ class WordModel: NSObject {
     var synonyms: Array<String> = []
     var antonyms: Array<String> = []
     var examples: Array<String> = []
+    var hindiTranslation: Array<String> = []
 }
