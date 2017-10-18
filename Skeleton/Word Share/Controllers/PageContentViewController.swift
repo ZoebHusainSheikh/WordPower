@@ -57,6 +57,7 @@ class PageContentViewController: MainViewController {
     // MARK: - Private Methods
     
     private func isDataExist() ->Bool{
+        return true
         if PageContentViewController.word.word != shareWord{
             PageContentViewController.word = WordModel()
             return false
