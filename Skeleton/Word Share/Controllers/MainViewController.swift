@@ -30,7 +30,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupShareWord()
-        //view.addSubview(tableView)
     }
     
     private func setupShareWord(){

@@ -32,6 +32,8 @@ class PageContentViewController: MainViewController {
             PageContentViewController.word.word = shareWord
             let pageController:MainPageViewController = self.parent as! MainPageViewController
             pageController.navigationItem.title = shareWord
+            //TODO: avoid call
+            return
             RequestManager().getWordInformation(word: self.shareWord!, wordInfoType: wordInfoType) { (success, response) in
                 print(response ?? Constants.kErrorMessage)
                 if let word = response as! WordModel?{
@@ -57,7 +59,6 @@ class PageContentViewController: MainViewController {
     // MARK: - Private Methods
     
     private func isDataExist() ->Bool{
-        return true
         if PageContentViewController.word.word != shareWord{
             PageContentViewController.word = WordModel()
             return false

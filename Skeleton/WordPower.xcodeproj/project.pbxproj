@@ -27,6 +27,8 @@
 		4878156B1F947F4C00873D9F /* WordRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4878156A1F947F4C00873D9F /* WordRequest.swift */; };
 		4878156D1F9483A300873D9F /* Interface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4878156C1F9483A300873D9F /* Interface.swift */; };
 		4878156F1F948C2600873D9F /* WordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4878156E1F948C2600873D9F /* WordModel.swift */; };
+		4888A14F1F9DA75600DCA31C /* WordCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4888A14E1F9DA75600DCA31C /* WordCollectionViewCell.xib */; };
+		4888A1501F9DCF0600DCA31C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A1D53AE1EDEB2A800CCCBE7 /* Assets.xcassets */; };
 		9A1D53A51EDEB2A800CCCBE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D53A41EDEB2A800CCCBE7 /* AppDelegate.swift */; };
 		9A1D53AA1EDEB2A800CCCBE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A1D53A81EDEB2A800CCCBE7 /* Main.storyboard */; };
 		9A1D53AD1EDEB2A800CCCBE7 /* Skeleton.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D53AB1EDEB2A800CCCBE7 /* Skeleton.xcdatamodeld */; };
@@ -146,6 +148,7 @@
 		4878156A1F947F4C00873D9F /* WordRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRequest.swift; sourceTree = "<group>"; };
 		4878156C1F9483A300873D9F /* Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interface.swift; sourceTree = "<group>"; };
 		4878156E1F948C2600873D9F /* WordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordModel.swift; sourceTree = "<group>"; };
+		4888A14E1F9DA75600DCA31C /* WordCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WordCollectionViewCell.xib; sourceTree = "<group>"; };
 		9A1D53A11EDEB2A800CCCBE7 /* WordPower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordPower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A1D53A41EDEB2A800CCCBE7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A1D53A91EDEB2A800CCCBE7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -324,6 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				481E62CC1F95FFE200D74899 /* MainInterface.storyboard */,
+				4888A14E1F9DA75600DCA31C /* WordCollectionViewCell.xib */,
 			);
 			path = StoryboardsAndXIBs;
 			sourceTree = "<group>";
@@ -705,6 +709,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4888A14F1F9DA75600DCA31C /* WordCollectionViewCell.xib in Resources */,
+				4888A1501F9DCF0600DCA31C /* Assets.xcassets in Resources */,
 				481E62CE1F95FFE200D74899 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

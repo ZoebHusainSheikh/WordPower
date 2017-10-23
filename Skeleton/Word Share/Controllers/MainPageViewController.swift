@@ -10,8 +10,12 @@ import UIKit
 import Social
 import MobileCoreServices
 
-class MainPageViewController: UIPageViewController, UIPageViewControllerDataSource, UICollectionViewDataSource, UICollectionViewDelegate {
+class MainPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    var viewControllerList:[UIViewController] = []
+    var selectedPageIndex:Int = 0
+    
+    //Mark: CollectionView Datasource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrPageTitle.count
     }
@@ -21,20 +25,31 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         cell.textLabel.text = arrPageTitle[indexPath.row] as? String
         
         if (indexPath.row == 0){
-            cell.textLabel.textColor = UIColor.blue
+            cell.textLabel.textColor = UIColor.white
+            cell.backgroungTabImageView.image = UIImage(named: "SelectedTab")
         }
         else{
             cell.textLabel.textColor = UIColor.lightGray
+            cell.backgroungTabImageView.image = UIImage(named: "UnSelectedTab")
         }
         return cell
     }
     
+    //Mark: CollectionView Delegate Methods
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        for cell in collectionView.visibleCells {
-            (cell as! WordCollectionViewCell).textLabel.textColor = UIColor.lightGray
-        }
-        if let cell = collectionView.cellForItem(at: indexPath) as! WordCollectionViewCell? {
-            cell.textLabel.textColor = UIColor.blue
+        if(selectedPageIndex != indexPath.item){
+            for cell in collectionView.visibleCells {
+                (cell as! WordCollectionViewCell).textLabel.textColor = UIColor.lightGray
+                (cell as! WordCollectionViewCell).backgroungTabImageView.image = UIImage(named: "UnSelectedTab")
+            }
+            if let cell = collectionView.cellForItem(at: indexPath) as! WordCollectionViewCell? {
+                cell.textLabel.textColor = UIColor.white
+                cell.backgroungTabImageView.image = UIImage(named: "SelectedTab")
+            }
+            
+            selectPageAtIndex(index: indexPath.item)
+            selectedPageIndex = indexPath.item
         }
     }
     
@@ -42,22 +57,22 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionViewScrollDirection.horizontal
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.size.width/4, height: 50)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.size.width/4, height: 40)
         layout.minimumInteritemSpacing = 0;
         layout.minimumLineSpacing = 0;
         let navigationBarHeight: CGFloat = 20 + self.navigationController!.navigationBar.frame.height
         let rect = CGRect(
             origin: CGPoint(x: 0, y: navigationBarHeight),
-            size: CGSize(width: UIScreen.main.bounds.size.width, height: 50)
+            size: CGSize(width: UIScreen.main.bounds.size.width, height: 40)
         )
         let collectionView = UICollectionView(frame: rect, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(WordCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
-        collectionView.backgroundColor = UIColor.white
-        collectionView.layer.borderWidth = 1
+        collectionView.register(UINib(nibName: "WordCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Cell")
+        collectionView.backgroundColor = UIColor.init(red: 228.0/255.0, green:  233.0/255.0, blue:  231.0/255.0, alpha: 1.0)
         
         collectionView.allowsMultipleSelection = false
+        print("Collection view initialised")
         return collectionView
     }()
     
@@ -67,8 +82,12 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples"];
+        for index in 0..<arrPageTitle.count {
+            viewControllerList.append(getViewControllerAtIndex(index: index))
+        }
         self.dataSource = self
-        self.setViewControllers([getViewControllerAtIndex(index: 0)] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+        self.delegate = self
+        self.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
         setupUI()
     }
 
@@ -81,7 +100,8 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     private func setupUI() {
         self.navigationItem.title = "Word Power"
-        navigationController?.navigationBar.backgroundColor = UIColor(red:0.97, green:0.44, blue:0.12, alpha:1.00)
+        navigationController?.navigationBar.backgroundColor = UIColor.white
+        navigationController?.navigationBar.tintColor = UIColor.init(red: 44.0/255.0, green:  193.0/255.0, blue:  133.0/255.0, alpha: 1.0) // Green color Theme
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainPageViewController.saveButtonTapped(sender:)))
         
         view.addSubview(collectionView)
@@ -94,6 +114,21 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         pageContentViewController.pageIndex = index
         pageContentViewController.wordInfoType = index == 0 ? .definitions : index == 1 ? .synonyms : index == 2 ? .antonyms : index == 3 ? .examples : .hindiTranslation
         return pageContentViewController
+    }
+    
+    func selectPageAtIndex(index:NSInteger)
+    {
+        if index < viewControllerList.count{
+            let page = viewControllerList[index]
+            weak var pvcw = self
+            self.setViewControllers([page], direction: (selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
+                if let pvcs = pvcw {
+                    DispatchQueue.main.async{
+                        pvcs.setViewControllers([page], direction: (self.selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: false, completion: nil)
+                    }
+                }
+            }
+        }
     }
     
     func hideExtensionWithCompletionHandler(completion:@escaping (Bool) -> Void) {
@@ -111,7 +146,22 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         })
     }
     
-    // Mark: - DataSource Methods
+    
+    // Mark: - UIPageVieControllerDelegate Methods
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        if (completed && finished) {
+            if let currentVC:PageContentViewController = pageViewController.viewControllers?.last as? PageContentViewController {
+                if(selectedPageIndex != currentVC.pageIndex){
+                    let indexPath = IndexPath(item: currentVC.pageIndex, section: 0)
+                    collectionView.delegate?.collectionView!(collectionView, didSelectItemAt: indexPath)
+                    selectedPageIndex = currentVC.pageIndex
+                    
+                }
+            }
+        }
+    }
+    
+    // Mark: - - UIPageVieControllerDataSource Methods
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         let pageContent: PageContentViewController = viewController as! PageContentViewController
         var index = pageContent.pageIndex
@@ -120,7 +170,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
             return nil
         }
         index -= 1
-        return getViewControllerAtIndex(index: index)
+        return viewControllerList[index]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -135,7 +185,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         {
             return nil;
         }
-        return getViewControllerAtIndex(index: index)
+        return viewControllerList[index]
     }
 
 }
