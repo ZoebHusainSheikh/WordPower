@@ -7,10 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		481E62CB1F95FFE200D74899 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E62CA1F95FFE200D74899 /* ShareViewController.swift */; };
 		481E62CE1F95FFE200D74899 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 481E62CC1F95FFE200D74899 /* MainInterface.storyboard */; };
 		481E62D21F95FFE200D74899 /* Word Share.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 481E62C81F95FFE200D74899 /* Word Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		481E62D81F96081600D74899 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E62D71F96081600D74899 /* MainViewController.swift */; };
 		481E62DC1F961E6E00D74899 /* EntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E62DB1F961E6D00D74899 /* EntryViewController.swift */; };
 		484C34B31F95C5A9004F65C4 /* BannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484C34B21F95C5A8004F65C4 /* BannerManager.swift */; };
 		486EDF5F1F9715D3005D49C2 /* NetworkAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF5E1F9715D3005D49C2 /* NetworkAPIClient.swift */; };
@@ -126,10 +124,8 @@
 /* Begin PBXFileReference section */
 		06BF5BC2524B1EC194944A50 /* Pods_Skeleton.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Skeleton.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481E62C81F95FFE200D74899 /* Word Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Word Share.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		481E62CA1F95FFE200D74899 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		481E62CD1F95FFE200D74899 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		481E62CF1F95FFE200D74899 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		481E62D71F96081600D74899 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		481E62D91F960DBA00D74899 /* WordPower.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WordPower.entitlements; sourceTree = "<group>"; };
 		481E62DA1F960DD000D74899 /* Word Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Word Share.entitlements"; sourceTree = "<group>"; };
 		481E62DB1F961E6D00D74899 /* EntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewController.swift; sourceTree = "<group>"; };
@@ -314,9 +310,7 @@
 		486EDF731F973093005D49C2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				481E62CA1F95FFE200D74899 /* ShareViewController.swift */,
 				481E62DB1F961E6D00D74899 /* EntryViewController.swift */,
-				481E62D71F96081600D74899 /* MainViewController.swift */,
 				486EDF751F973A7B005D49C2 /* MainPageViewController.swift */,
 				486EDF771F973AC6005D49C2 /* PageContentViewController.swift */,
 			);
@@ -813,10 +807,8 @@
 				486EDF5F1F9715D3005D49C2 /* NetworkAPIClient.swift in Sources */,
 				486EDF6B1F9720DE005D49C2 /* WordInterface.swift in Sources */,
 				486EDF671F97204F005D49C2 /* Request.swift in Sources */,
-				481E62CB1F95FFE200D74899 /* ShareViewController.swift in Sources */,
 				486EDF761F973A7B005D49C2 /* MainPageViewController.swift in Sources */,
 				486EDF661F97204F005D49C2 /* WordRequest.swift in Sources */,
-				481E62D81F96081600D74899 /* MainViewController.swift in Sources */,
 				481E62DC1F961E6E00D74899 /* EntryViewController.swift in Sources */,
 				486EDF7B1F976A34005D49C2 /* WordCollectionViewCell.swift in Sources */,
 				486EDF6D1F972189005D49C2 /* RequestManager.swift in Sources */,

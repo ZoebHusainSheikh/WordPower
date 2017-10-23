@@ -11,7 +11,7 @@ import UIKit
 class RequestManager: NSObject {
     
     //MARK: Word API 
-    func getWordInformation(word:String, wordInfoType:WordInfoType, completion:@escaping CompletionHandler){
-        WordInterface().getWordInformation(request: WordRequest().initWordRequest(word: word, wordInfoType: wordInfoType), completion: completion)
+    func getWordInformation(word:String, completion:@escaping CompletionHandler){
+        WordInterface().getWordInformation(request: WordRequest().initWordRequest(word: word), completion: completion)
     }
 }

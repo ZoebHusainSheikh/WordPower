@@ -8,9 +8,10 @@
 
 import UIKit
 
-class PageContentViewController: MainViewController {
+class PageContentViewController: UIViewController, UITableViewDataSource {
 
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var pageIndex: Int = 0
     var strTitle: String!
     var wordInfoType:WordInfoType = .definitions
@@ -18,8 +19,12 @@ class PageContentViewController: MainViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        titleLabel.text = strTitle
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.stopAnimation), name:NSNotification.Name("StopAnimationIdentifier"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.startAnimation), name:NSNotification.Name("StartAnimationIdentifier"), object: nil)
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TitleCellIdentifier")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SubtitleCellIdentifier")
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,38 +32,65 @@ class PageContentViewController: MainViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func performAPICall(){
-        guard isDataExist() else {
-            PageContentViewController.word.word = shareWord
-            let pageController:MainPageViewController = self.parent as! MainPageViewController
-            pageController.navigationItem.title = shareWord
-            //TODO: avoid call
-            return
-            RequestManager().getWordInformation(word: self.shareWord!, wordInfoType: wordInfoType) { (success, response) in
-                print(response ?? Constants.kErrorMessage)
-                if let word = response as! WordModel?{
-                    switch self.wordInfoType {
-                    case .definitions:
-                        PageContentViewController.word.definitions = word.definitions
-                    case .synonyms:
-                        PageContentViewController.word.synonyms = word.synonyms
-                    case .antonyms:
-                        PageContentViewController.word.antonyms = word.antonyms
-                    case .examples:
-                        PageContentViewController.word.examples = word.examples
-                    case .hindiTranslation:
-                        PageContentViewController.word.hindiTranslation = word.hindiTranslation
-                    }
-                }
-            }
-            
-            return
+    @objc func stopAnimation(){
+        loadAnimation(isLoading: false)
+    }
+    
+    @objc func startAnimation(){
+        loadAnimation()
+    }
+    
+    func loadAnimation(isLoading:Bool = true){
+        DispatchQueue.main.async {
+            isLoading ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            self.tableView.reloadData()
         }
     }
     
-    // MARK: - Private Methods
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch wordInfoType {
+        case .definitions:
+            return PageContentViewController.word.definitions.count
+        case .synonyms:
+            return PageContentViewController.word.synonyms.count
+        case .antonyms:
+            return PageContentViewController.word.antonyms.count
+        case .examples:
+            return PageContentViewController.word.examples.count
+        case .hindiTranslation:
+            return 1
+        }
+    }
     
-    private func isDataExist() ->Bool{
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = (wordInfoType == .definitions) ? tableView.dequeueReusableCell(withIdentifier: "SubtitleCellIdentifier", for: indexPath) : tableView.dequeueReusableCell(withIdentifier: "TitleCellIdentifier", for: indexPath)
+        return cell
+        let titleLabel:UILabel = cell.contentView.viewWithTag(100) as! UILabel
+        
+        switch wordInfoType {
+        case .definitions:
+            let subtitleLabel:UILabel = cell.contentView.viewWithTag(101) as! UILabel
+            let dict = PageContentViewController.word.definitions[indexPath.row]
+            if let definition = dict["definition"]{
+                titleLabel.text = definition
+            }
+            if let partOfSpeech = dict["partOfSpeech"]{
+                subtitleLabel.text = partOfSpeech
+            }
+            
+        case .synonyms:
+            titleLabel.text = PageContentViewController.word.synonyms[indexPath.row]
+        case .antonyms:
+            titleLabel.text = PageContentViewController.word.antonyms[indexPath.row]
+        case .examples:
+            titleLabel.text = PageContentViewController.word.examples[indexPath.row]
+        case .hindiTranslation:
+            titleLabel.text = PageContentViewController.word.hindiTranslation
+        }
+        
+        return cell
+    }
+    /*private func isDataExist() ->Bool{
         if PageContentViewController.word.word != shareWord{
             PageContentViewController.word = WordModel()
             return false
@@ -75,6 +107,6 @@ class PageContentViewController: MainViewController {
         case .hindiTranslation:
             return !(PageContentViewController.word.hindiTranslation.isEmpty)
         }
-    }
+    }*/
 
 }

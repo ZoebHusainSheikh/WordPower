@@ -10,11 +10,8 @@ import UIKit
 
 class WordRequest: Request {
     
-    var wordInfoType:WordInfoType!
-    
-    func initWordRequest(word:String, wordInfoType:WordInfoType) -> WordRequest{
-        self.wordInfoType = wordInfoType
-        urlPath = word + "/" + wordInfoType.getString()
+    func initWordRequest(word:String) -> WordRequest{
+        urlPath = word
         
         return self
     }

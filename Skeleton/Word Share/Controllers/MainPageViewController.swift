@@ -14,6 +14,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     var viewControllerList:[UIViewController] = []
     var selectedPageIndex:Int = 0
+    var shareWord:String? = nil
     
     //Mark: CollectionView Datasource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -89,8 +90,9 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         self.delegate = self
         self.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
         setupUI()
+        setupShareWord()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -105,6 +107,42 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainPageViewController.saveButtonTapped(sender:)))
         
         view.addSubview(collectionView)
+        self.view.isUserInteractionEnabled = false
+    }
+    
+    private func setupShareWord(){
+        let extensionItem = extensionContext?.inputItems[0] as! NSExtensionItem
+        let contentTypeText = kUTTypeText as String
+        
+        for attachment in extensionItem.attachments as! [NSItemProvider] {
+            
+            if attachment.hasItemConformingToTypeIdentifier(contentTypeText)
+            {
+                attachment.loadItem(forTypeIdentifier: contentTypeText, options: nil, completionHandler: { (results, error) in
+                    let text = results as! String
+                    self.shareWord = text
+                    self.navigationItem.title = text
+                    self.performAPICall()
+                })
+            }
+        }
+    }
+    
+    func performAPICall(){
+        NotificationCenter.default.post(name: Notification.Name("StartAnimationIdentifier"), object: nil)
+        PageContentViewController.word.word = shareWord
+        RequestManager().getWordInformation(word: self.shareWord!) { (success, response) in
+            print(response ?? Constants.kErrorMessage)
+            // Notify page content controllers
+            DispatchQueue.main.async {
+                if let word = response as! WordModel?{
+                    PageContentViewController.word = word
+                }
+                
+                self.view.isUserInteractionEnabled = true
+                NotificationCenter.default.post(name: Notification.Name("StopAnimationIdentifier"), object: nil)
+            }
+        }
     }
     
     func getViewControllerAtIndex(index: NSInteger) -> PageContentViewController{
@@ -187,7 +225,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
         return viewControllerList[index]
     }
-
+    
 }
 
 private extension MainPageViewController {
@@ -195,3 +233,4 @@ private extension MainPageViewController {
         static let DeckCell = "deckCell"
     }
 }
+

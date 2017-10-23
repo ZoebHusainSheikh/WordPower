@@ -34,9 +34,9 @@ enum WordInfoType {
 class WordModel: NSObject {
     
     var word:String?
-    var definitions: Array<Dictionary<String, AnyObject>> = []
+    var definitions: Array<Dictionary<String, String>> = []
     var synonyms: Array<String> = []
     var antonyms: Array<String> = []
     var examples: Array<String> = []
-    var hindiTranslation: Array<String> = []
+    var hindiTranslation:String? = nil
 }
