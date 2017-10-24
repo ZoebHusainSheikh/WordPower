@@ -122,12 +122,26 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
             {
                 attachment.loadItem(forTypeIdentifier: contentTypeText, options: nil, completionHandler: { (results, error) in
                     let text = results as! String
-                    self.shareWord = text
-                    self.navigationItem.title = text
-                    self.performAPICall()
+                    if self.validateStringNotUrl(urlString: text){
+                        self.shareWord = text
+                        self.navigationItem.title = text
+                        self.performAPICall()
+                    }
+                    else{
+                        self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
+                    }
                 })
             }
         }
+    }
+    
+    func validateStringNotUrl (urlString: String) -> Bool {
+        if let url:URL = URL(string: urlString){
+            if (url.scheme != nil) && (url.host != nil){
+                return false
+            }
+        }
+        return true
     }
     
     func performAPICall(){
@@ -137,7 +151,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
             print(response ?? Constants.kErrorMessage)
             // Notify page content controllers
             DispatchQueue.main.async {
-                if let word = response as! WordModel?{
+                if let word = response as? WordModel{
                     PageContentViewController.word = word
                 }
                 

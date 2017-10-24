@@ -36,7 +36,6 @@ class EntryViewController : UINavigationController {
     }
 }
 
-//TODO: Restrict only text for share extension
 //TODO: Resolve 1st time nothing happen issue
 //TODO: Resolve warnings
 //TODO: Resolve Orientation issue

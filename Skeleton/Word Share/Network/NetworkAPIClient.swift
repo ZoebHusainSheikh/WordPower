@@ -35,31 +35,40 @@ class NetworkAPIClient: NSObject {
         dataTask(request: request, method: "PUT", completion: completion)
     }
     
-    private func get(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
-        dataTask(request: request, method: "GET", completion: completion)
+    private func get(request: NSMutableURLRequest?, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
+        if request != nil{
+            dataTask(request: request!, method: "GET", completion: completion)
+        }
+        else
+        {
+            completion(false, Constants.kErrorMessage as AnyObject)
+        }
     }
     
-    private func clientURLRequest(path: String, params: Dictionary<String, AnyObject>? = nil) -> NSMutableURLRequest {
-        let request = NSMutableURLRequest(url: NSURL(string: "https://wordsapiv1.p.mashape.com/words/"+path)! as URL)
-        request.setValue("gffsVZi52omsh52gxrT335Shh8aNp128WjajsnahxEMl6530yo", forHTTPHeaderField: "X-Mashape-Key")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        /*if let params = params {
-         var paramString = ""
-         for (key, value) in params {
-         let escapedKey = key.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())
-         let escapedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())
-         paramString += "\(escapedKey)=\(escapedValue)&"
-         }
-         
-         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-         request.HTTPBody = paramString.dataUsingEncoding(NSUTF8StringEncoding)
-         }
-         
-         if let token = token {
-         request.addValue("Bearer "+token, forHTTPHeaderField: "Authorization")
-         }*/
+    private func clientURLRequest(path: String, params: Dictionary<String, AnyObject>? = nil) -> NSMutableURLRequest? {
         
-        return request
+        if let url:URL = URL(string: "https://wordsapiv1.p.mashape.com/words/"+path) {
+            let request = NSMutableURLRequest(url: url)
+            request.setValue("gffsVZi52omsh52gxrT335Shh8aNp128WjajsnahxEMl6530yo", forHTTPHeaderField: "X-Mashape-Key")
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            /*if let params = params {
+             var paramString = ""
+             for (key, value) in params {
+             let escapedKey = key.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())
+             let escapedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())
+             paramString += "\(escapedKey)=\(escapedValue)&"
+             }
+             
+             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+             request.HTTPBody = paramString.dataUsingEncoding(NSUTF8StringEncoding)
+             }
+             
+             if let token = token {
+             request.addValue("Bearer "+token, forHTTPHeaderField: "Authorization")
+             }*/
+            return request
+        }
+    return nil
     }
     
     func getObject(request: Request, completion: @escaping CompletionHandler) -> Void {
