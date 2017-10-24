@@ -31,7 +31,12 @@ class EntryViewController : UINavigationController {
         self.view.transform = CGAffineTransform(translationX: 0, y: self.view.frame.size.height)
         
         UIView.animate(withDuration: 0.25, animations: { () -> Void in
-            self.view.transform = CGAffineTransform.identity//CGAffineTransformIdentity
+            self.view.transform = CGAffineTransform.identity
         })
     }
 }
+
+//TODO: Restrict only text for share extension
+//TODO: Resolve 1st time nothing happen issue
+//TODO: Resolve warnings
+//TODO: Resolve Orientation issue

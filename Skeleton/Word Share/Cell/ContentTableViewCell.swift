@@ -24,9 +24,46 @@ class ContentTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func updateContent(title:String, subtitle:String = "") {
-        self.titleLabel.text = title
-        self.subtitleLabel.text = subtitle
+    func updateContent(title:String, subtitle:String = "", searchText:String) {
+        if title.contains(searchText){
+            makeMatchingPartBold(searchText: searchText, title: title)
+        }
+        else{
+            self.titleLabel.text = title
+        }
+        
+        if self.subtitleLabel != nil{
+            self.subtitleLabel.text = subtitle
+        }
+    }
+    
+    func makeMatchingPartBold(searchText: String, title:String?) {
+        
+        // check label text & search text
+        guard
+            let labelText = title
+            else {
+                return
+        }
+        
+        // bold attribute
+        let boldAttr = [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: titleLabel.font.pointSize)]
+        
+        // check if label text contains search text
+        if let matchRange: Range = labelText.lowercased().range(of: searchText.lowercased()) {
+            
+            // get range start/length because NSMutableAttributedString.setAttributes() needs NSRange not Range<String.Index>
+            let matchRangeStart: Int = labelText.distance(from: labelText.startIndex, to: matchRange.lowerBound)
+            let matchRangeEnd: Int = labelText.distance(from: labelText.startIndex, to: matchRange.upperBound)
+            let matchRangeLength: Int = matchRangeEnd - matchRangeStart
+            
+            // create mutable attributed string & bold matching part
+            let newLabelText = NSMutableAttributedString(string: labelText)
+            newLabelText.setAttributes(boldAttr, range: NSMakeRange(matchRangeStart, matchRangeLength))
+            
+            // set label attributed text
+            titleLabel.attributedText = newLabelText
+        }
     }
 
 }

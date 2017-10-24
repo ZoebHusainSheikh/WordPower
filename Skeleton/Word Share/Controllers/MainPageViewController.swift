@@ -83,6 +83,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        PageContentViewController.word = WordModel()
         arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples"];
         for index in 0..<arrPageTitle.count {
             viewControllerList.append(getViewControllerAtIndex(index: index))

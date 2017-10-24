@@ -47,7 +47,7 @@ class WordInterface: Interface {
                     let synonyms:Array<String>? = itemInfo["synonyms"] as? Array<String>
                     if synonyms != nil{
                         for synonymsItem in synonyms!{
-                            if word.synonyms.index(of: synonymsItem) != nil{
+                            if word.synonyms.index(of: synonymsItem) == nil{
                                 word.synonyms.append(synonymsItem)
                             }
                         }
@@ -56,7 +56,7 @@ class WordInterface: Interface {
                     let antonyms:Array<String>? = itemInfo["antonyms"] as? Array<String>
                     if antonyms != nil{
                         for antonymsItem in antonyms!{
-                            if word.antonyms.index(of: antonymsItem) != nil{
+                            if word.antonyms.index(of: antonymsItem) == nil{
                                 word.antonyms.append(antonymsItem)
                                 
                             }
@@ -66,7 +66,7 @@ class WordInterface: Interface {
                     let examples:Array<String>? = itemInfo["examples"] as? Array<String>
                     if examples != nil{
                         for examplesItem in examples!{
-                            if word.examples.index(of: examplesItem) != nil{
+                            if word.examples.index(of: examplesItem) == nil{
                                 word.examples.append(examplesItem)
                                 
                             }
