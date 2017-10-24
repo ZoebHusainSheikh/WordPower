@@ -10,7 +10,7 @@ import UIKit
 
 class RequestManager: NSObject {
     
-    //MARK: Word API 
+    // MARK: - Word API 
     func getWordInformation(word:String, completion:@escaping CompletionHandler){
         WordInterface().getWordInformation(request: WordRequest().initWordRequest(word: word), completion: completion)
     }

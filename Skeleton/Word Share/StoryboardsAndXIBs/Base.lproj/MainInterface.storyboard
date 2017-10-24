@@ -35,7 +35,7 @@
                                 <rect key="frame" x="0.0" y="40" width="375" height="627"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SubtitleCellIdentifier" rowHeight="50" id="9ao-y2-w9L">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SubtitleCellIdentifier" rowHeight="50" id="9ao-y2-w9L" customClass="ContentTableViewCell" customModule="Word_Share" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9ao-y2-w9L" id="y5j-X4-5X7">
@@ -69,8 +69,12 @@
                                                 <constraint firstAttribute="bottom" secondItem="Pqj-ON-tz8" secondAttribute="bottom" id="jaa-mX-sZA"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="subtitleLabel" destination="Pqj-ON-tz8" id="3RS-il-PKr"/>
+                                            <outlet property="titleLabel" destination="VE9-bC-Ynz" id="sxk-uR-n8G"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TitleCellIdentifier" rowHeight="50" id="BGT-uI-6Bg">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TitleCellIdentifier" rowHeight="50" id="BGT-uI-6Bg" customClass="ContentTableViewCell" customModule="Word_Share" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="78" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BGT-uI-6Bg" id="HMl-He-R8p">
@@ -92,6 +96,9 @@
                                                 <constraint firstAttribute="bottom" secondItem="j3f-Uw-vY1" secondAttribute="bottom" id="bD5-cl-bcP"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="titleLabel" destination="j3f-Uw-vY1" id="6SO-Sl-Prv"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>

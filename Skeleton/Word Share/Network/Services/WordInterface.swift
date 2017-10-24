@@ -34,7 +34,7 @@ class WordInterface: Interface {
             
             let word:WordModel = WordModel()
             word.word = wordItem
-            
+            //TODO: Use ObjectMapper for parsing
             let results = responseDict["results"] as? Array<Dictionary<String, AnyObject>>
             if results != nil{
                 for itemInfo in results!{

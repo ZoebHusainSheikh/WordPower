@@ -10,6 +10,7 @@
 		481E62CE1F95FFE200D74899 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 481E62CC1F95FFE200D74899 /* MainInterface.storyboard */; };
 		481E62D21F95FFE200D74899 /* Word Share.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 481E62C81F95FFE200D74899 /* Word Share.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		481E62DC1F961E6E00D74899 /* EntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E62DB1F961E6D00D74899 /* EntryViewController.swift */; };
+		4846B5221F9EF2FB003E912E /* ContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4846B5211F9EF2FB003E912E /* ContentTableViewCell.swift */; };
 		484C34B31F95C5A9004F65C4 /* BannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484C34B21F95C5A8004F65C4 /* BannerManager.swift */; };
 		486EDF5F1F9715D3005D49C2 /* NetworkAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF5E1F9715D3005D49C2 /* NetworkAPIClient.swift */; };
 		486EDF611F971FE9005D49C2 /* WordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486EDF601F971FE9005D49C2 /* WordModel.swift */; };
@@ -129,6 +130,7 @@
 		481E62D91F960DBA00D74899 /* WordPower.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WordPower.entitlements; sourceTree = "<group>"; };
 		481E62DA1F960DD000D74899 /* Word Share.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Word Share.entitlements"; sourceTree = "<group>"; };
 		481E62DB1F961E6D00D74899 /* EntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewController.swift; sourceTree = "<group>"; };
+		4846B5211F9EF2FB003E912E /* ContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableViewCell.swift; sourceTree = "<group>"; };
 		484C34B21F95C5A8004F65C4 /* BannerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerManager.swift; sourceTree = "<group>"; };
 		486EDF5E1F9715D3005D49C2 /* NetworkAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkAPIClient.swift; sourceTree = "<group>"; };
 		486EDF601F971FE9005D49C2 /* WordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordModel.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 			isa = PBXGroup;
 			children = (
 				486EDF7A1F976A34005D49C2 /* WordCollectionViewCell.swift */,
+				4846B5211F9EF2FB003E912E /* ContentTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -808,6 +811,7 @@
 				486EDF6B1F9720DE005D49C2 /* WordInterface.swift in Sources */,
 				486EDF671F97204F005D49C2 /* Request.swift in Sources */,
 				486EDF761F973A7B005D49C2 /* MainPageViewController.swift in Sources */,
+				4846B5221F9EF2FB003E912E /* ContentTableViewCell.swift in Sources */,
 				486EDF661F97204F005D49C2 /* WordRequest.swift in Sources */,
 				481E62DC1F961E6E00D74899 /* EntryViewController.swift in Sources */,
 				486EDF7B1F976A34005D49C2 /* WordCollectionViewCell.swift in Sources */,

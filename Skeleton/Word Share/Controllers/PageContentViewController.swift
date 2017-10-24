@@ -23,8 +23,8 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.stopAnimation), name:NSNotification.Name("StopAnimationIdentifier"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.startAnimation), name:NSNotification.Name("StartAnimationIdentifier"), object: nil)
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TitleCellIdentifier")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SubtitleCellIdentifier")
+        tableView.register(ContentTableViewCell.self, forCellReuseIdentifier: "TitleCellIdentifier")
+        tableView.register(ContentTableViewCell.self, forCellReuseIdentifier: "SubtitleCellIdentifier")
     }
 
     override func didReceiveMemoryWarning() {

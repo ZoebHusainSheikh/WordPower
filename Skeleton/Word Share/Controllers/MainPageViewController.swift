@@ -16,7 +16,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     var selectedPageIndex:Int = 0
     var shareWord:String? = nil
     
-    //Mark: CollectionView Datasource Methods
+    // MARK: - CollectionView Datasource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrPageTitle.count
     }
@@ -36,7 +36,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         return cell
     }
     
-    //Mark: CollectionView Delegate Methods
+    // MARK: - CollectionView Delegate Methods
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if(selectedPageIndex != indexPath.item){
@@ -79,7 +79,8 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     var arrPageTitle: NSArray = NSArray()
     
-    // Mark: - View Life Cycle
+    // MARK: - View Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples"];
@@ -98,7 +99,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         // Dispose of any resources that can be recreated.
     }
     
-    // Mark: - Private Methods
+    // MARK: - Private Methods
     
     private func setupUI() {
         self.navigationItem.title = "Word Power"
@@ -176,7 +177,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }, completion: completion)
     }
     
-    // Mark: - IBActions Methods
+    // MARK: - IBActions Methods
     
     @objc func saveButtonTapped(sender: UIBarButtonItem) {
         self.hideExtensionWithCompletionHandler(completion: { (Bool) -> Void in
@@ -185,7 +186,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     }
     
     
-    // Mark: - UIPageVieControllerDelegate Methods
+    // MARK: - UIPageVieControllerDelegate Methods
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if (completed && finished) {
             if let currentVC:PageContentViewController = pageViewController.viewControllers?.last as? PageContentViewController {
@@ -199,7 +200,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
     }
     
-    // Mark: - - UIPageVieControllerDataSource Methods
+    // MARK: - UIPageVieControllerDataSource Methods
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         let pageContent: PageContentViewController = viewController as! PageContentViewController
         var index = pageContent.pageIndex
