@@ -51,6 +51,8 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
             
             selectPageAtIndex(index: indexPath.item)
             selectedPageIndex = indexPath.item
+            
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
     }
     
@@ -83,11 +85,12 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        PageContentViewController.word = WordModel()
-        arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples"];
+        BaseContentViewController.word = WordModel()
+        arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"];
         for index in 0..<arrPageTitle.count {
             viewControllerList.append(getViewControllerAtIndex(index: index))
         }
+        
         self.dataSource = self
         self.delegate = self
         self.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
@@ -146,24 +149,49 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func performAPICall(){
         NotificationCenter.default.post(name: Notification.Name("StartAnimationIdentifier"), object: nil)
-        PageContentViewController.word.word = shareWord
-        RequestManager().getTranslationInformation(word: self.shareWord!) { (success, response) in
+        BaseContentViewController.word.word = shareWord
+        RequestManager().getWordInformation(word: self.shareWord!) { (success, response) in
             print(response ?? Constants.kErrorMessage)
             // Notify page content controllers
             DispatchQueue.main.async {
                 if let word = response as? WordModel{
-                    PageContentViewController.word = word
+                    BaseContentViewController.word = word
                 }
                 
                 self.view.isUserInteractionEnabled = true
                 NotificationCenter.default.post(name: Notification.Name("StopAnimationIdentifier"), object: nil)
+                
+                self.performTranslationAPICall()
             }
         }
     }
     
-    func getViewControllerAtIndex(index: NSInteger) -> PageContentViewController{
+    func performTranslationAPICall(){
+        NotificationCenter.default.post(name: Notification.Name("StartTranslatorAnimationIdentifier"), object: nil)
+        RequestManager().getTranslationInformation(word: self.shareWord!) { (success, response) in
+            print(response ?? Constants.kErrorMessage)
+            // Notify translator controller
+            DispatchQueue.main.async {
+                if let word = response as? WordModel{
+                    BaseContentViewController.word.hindiTranslation = word.hindiTranslation
+                }
+                
+                NotificationCenter.default.post(name: Notification.Name("StopTranslatorAnimationIdentifier"), object: nil)
+            }
+        }
+    }
+    
+    func getViewControllerAtIndex(index: NSInteger) -> BaseContentViewController{
         // Create a new view controller and pass suitable data.
-        let pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "PageContentViewController") as! PageContentViewController
+        
+        var pageContentViewController:BaseContentViewController!
+        if index == (arrPageTitle.count-1){
+            pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "TranslatorViewController") as! BaseContentViewController
+        }
+        else{
+            pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "PageContentViewController") as! BaseContentViewController
+        }
+        
         pageContentViewController.strTitle = "\(arrPageTitle[index])"
         pageContentViewController.pageIndex = index
         pageContentViewController.wordInfoType = index == 0 ? .definitions : index == 1 ? .synonyms : index == 2 ? .antonyms : index == 3 ? .examples : .hindiTranslation
@@ -204,7 +232,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     // MARK: - UIPageVieControllerDelegate Methods
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if (completed && finished) {
-            if let currentVC:PageContentViewController = pageViewController.viewControllers?.last as? PageContentViewController {
+            if let currentVC:BaseContentViewController = pageViewController.viewControllers?.last as? BaseContentViewController {
                 if(selectedPageIndex != currentVC.pageIndex){
                     let indexPath = IndexPath(item: currentVC.pageIndex, section: 0)
                     collectionView.delegate?.collectionView!(collectionView, didSelectItemAt: indexPath)
@@ -217,7 +245,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     // MARK: - UIPageVieControllerDataSource Methods
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        let pageContent: PageContentViewController = viewController as! PageContentViewController
+        let pageContent: BaseContentViewController = viewController as! BaseContentViewController
         var index = pageContent.pageIndex
         if ((index == 0) || (index == NSNotFound))
         {
@@ -228,7 +256,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        let pageContent: PageContentViewController = viewController as! PageContentViewController
+        let pageContent: BaseContentViewController = viewController as! BaseContentViewController
         var index = pageContent.pageIndex
         if (index == NSNotFound)
         {

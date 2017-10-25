@@ -73,11 +73,16 @@ class NetworkAPIClient: NSObject {
     
     private func translationClientURLRequest(path: String, params: Dictionary<String, AnyObject>? = nil) -> NSMutableURLRequest? {
         
-        if let url:URL = URL(string: "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20171024T105142Z.903b3e1c791c4cd5.3de81202f9dda907aab4dafbe86006f16141a764&lang=hi&text=" + path) {
+        if let url:URL = URL(string: "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20171024T105142Z.903b3e1c791c4cd5.3de81202f9dda907aab4dafbe86006f16141a764&lang=hi") {
             let request = NSMutableURLRequest(url: url)
             request.setValue("*/*", forHTTPHeaderField: "Accept")
             request.setValue("17", forHTTPHeaderField: "Content-Length")
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            
+            let escapedValue = path.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+            let paramString = "text=\(escapedValue ?? path)&"
+            request.httpBody = paramString.data(using: String.Encoding.utf8)
+            
             return request
         }
         return nil

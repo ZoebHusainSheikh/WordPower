@@ -28,6 +28,8 @@
 		4878156F1F948C2600873D9F /* WordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4878156E1F948C2600873D9F /* WordModel.swift */; };
 		4888A14F1F9DA75600DCA31C /* WordCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4888A14E1F9DA75600DCA31C /* WordCollectionViewCell.xib */; };
 		4888A1501F9DCF0600DCA31C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A1D53AE1EDEB2A800CCCBE7 /* Assets.xcassets */; };
+		48D418471FA07935009873CC /* TranslatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D418461FA07935009873CC /* TranslatorViewController.swift */; };
+		48D418491FA085C0009873CC /* BaseContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D418481FA085C0009873CC /* BaseContentViewController.swift */; };
 		9A1D53A51EDEB2A800CCCBE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D53A41EDEB2A800CCCBE7 /* AppDelegate.swift */; };
 		9A1D53AA1EDEB2A800CCCBE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A1D53A81EDEB2A800CCCBE7 /* Main.storyboard */; };
 		9A1D53AD1EDEB2A800CCCBE7 /* Skeleton.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D53AB1EDEB2A800CCCBE7 /* Skeleton.xcdatamodeld */; };
@@ -146,6 +148,8 @@
 		4878156C1F9483A300873D9F /* Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interface.swift; sourceTree = "<group>"; };
 		4878156E1F948C2600873D9F /* WordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordModel.swift; sourceTree = "<group>"; };
 		4888A14E1F9DA75600DCA31C /* WordCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WordCollectionViewCell.xib; sourceTree = "<group>"; };
+		48D418461FA07935009873CC /* TranslatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorViewController.swift; sourceTree = "<group>"; };
+		48D418481FA085C0009873CC /* BaseContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseContentViewController.swift; sourceTree = "<group>"; };
 		501B046B048B799AA68DA297 /* Pods-WordPower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPower.release.xcconfig"; path = "Pods/Target Support Files/Pods-WordPower/Pods-WordPower.release.xcconfig"; sourceTree = "<group>"; };
 		8C6BE896D9EEF665619F0325 /* Pods_WordPower.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WordPower.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A1D53A11EDEB2A800CCCBE7 /* WordPower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordPower.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -315,6 +319,8 @@
 				481E62DB1F961E6D00D74899 /* EntryViewController.swift */,
 				486EDF751F973A7B005D49C2 /* MainPageViewController.swift */,
 				486EDF771F973AC6005D49C2 /* PageContentViewController.swift */,
+				48D418461FA07935009873CC /* TranslatorViewController.swift */,
+				48D418481FA085C0009873CC /* BaseContentViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -809,6 +815,7 @@
 			files = (
 				486EDF5F1F9715D3005D49C2 /* NetworkAPIClient.swift in Sources */,
 				486EDF6B1F9720DE005D49C2 /* WordInterface.swift in Sources */,
+				48D418471FA07935009873CC /* TranslatorViewController.swift in Sources */,
 				486EDF671F97204F005D49C2 /* Request.swift in Sources */,
 				486EDF761F973A7B005D49C2 /* MainPageViewController.swift in Sources */,
 				4846B5221F9EF2FB003E912E /* ContentTableViewCell.swift in Sources */,
@@ -819,6 +826,7 @@
 				486EDF781F973AC6005D49C2 /* PageContentViewController.swift in Sources */,
 				486EDF611F971FE9005D49C2 /* WordModel.swift in Sources */,
 				486EDF631F97200B005D49C2 /* Constants.swift in Sources */,
+				48D418491FA085C0009873CC /* BaseContentViewController.swift in Sources */,
 				486EDF6A1F9720DE005D49C2 /* Interface.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -939,6 +947,7 @@
 		481E62D41F95FFE200D74899 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
@@ -965,6 +974,7 @@
 		481E62D51F95FFE200D74899 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;

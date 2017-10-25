@@ -26,7 +26,7 @@ enum WordInfoType {
         case .examples:
             return "examples"
         case .hindiTranslation:
-            return "hindiTranslation"
+            return "hindi translation"
         }
     }
 }

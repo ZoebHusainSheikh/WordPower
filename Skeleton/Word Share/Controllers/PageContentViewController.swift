@@ -8,15 +8,11 @@
 
 import UIKit
 
-class PageContentViewController: UIViewController, UITableViewDataSource {
+class PageContentViewController: BaseContentViewController, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var noContentLabel: UILabel!
-    var pageIndex: Int = 0
-    var strTitle: String!
-    var wordInfoType:WordInfoType = .definitions
-    static var word:WordModel = WordModel()
     
     // MARK: - View Life Cycle
     
@@ -26,7 +22,7 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.stopAnimation), name:NSNotification.Name("StopAnimationIdentifier"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.startAnimation), name:NSNotification.Name("StartAnimationIdentifier"), object: nil)
         
-        if PageContentViewController.word.word != nil{
+        if BaseContentViewController.word.word != nil{
             tableView.reloadData()
             showNoContentView()
         }
@@ -41,15 +37,15 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch wordInfoType {
-        case .hindiTranslation:
-            return PageContentViewController.word.definitions.count
-        case .synonyms:
-            return PageContentViewController.word.synonyms.count
-        case .antonyms:
-            return PageContentViewController.word.antonyms.count
-        case .examples:
-            return PageContentViewController.word.examples.count
         case .definitions:
+            return BaseContentViewController.word.definitions.count
+        case .synonyms:
+            return BaseContentViewController.word.synonyms.count
+        case .antonyms:
+            return BaseContentViewController.word.antonyms.count
+        case .examples:
+            return BaseContentViewController.word.examples.count
+        case .hindiTranslation:
             return 1
         }
     }
@@ -57,25 +53,25 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = (wordInfoType == .definitions) ? tableView.dequeueReusableCell(withIdentifier: "SubtitleCellIdentifier", for: indexPath) as! ContentTableViewCell : tableView.dequeueReusableCell(withIdentifier: "TitleCellIdentifier", for: indexPath) as! ContentTableViewCell
         switch wordInfoType {
-        case .hindiTranslation:
-            let dict = PageContentViewController.word.definitions[indexPath.row]
+        case .definitions:
+            let dict = BaseContentViewController.word.definitions[indexPath.row]
             if let definition = dict["definition"]{
                 
                 var pos:String = ""
                 if let partOfSpeech = dict["partOfSpeech"] as String?{
                     pos = partOfSpeech
                 }
-                cell.updateContent(title: definition, subtitle: pos, searchText: PageContentViewController.word.word!)
+                cell.updateContent(title: definition, subtitle: pos, searchText: BaseContentViewController.word.word!)
             }
             
         case .synonyms:
-            cell.updateContent(title: PageContentViewController.word.synonyms[indexPath.row], searchText: PageContentViewController.word.word!)
+            cell.updateContent(title: BaseContentViewController.word.synonyms[indexPath.row], searchText: BaseContentViewController.word.word!)
         case .antonyms:
-            cell.updateContent(title: PageContentViewController.word.antonyms[indexPath.row], searchText: PageContentViewController.word.word!)
+            cell.updateContent(title: BaseContentViewController.word.antonyms[indexPath.row], searchText: BaseContentViewController.word.word!)
         case .examples:
-            cell.updateContent(title: PageContentViewController.word.examples[indexPath.row], searchText: PageContentViewController.word.word!)
-        case .definitions:
-            cell.updateTranslationContent(title: PageContentViewController.word.hindiTranslation)
+            cell.updateContent(title: BaseContentViewController.word.examples[indexPath.row], searchText: BaseContentViewController.word.word!)
+        case .hindiTranslation:
+            cell.updateTranslationContent(title: (BaseContentViewController.word.hindiTranslation)!)
         }
         
         return cell
@@ -106,20 +102,20 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
         else{
             switch wordInfoType {
             case .definitions:
-                noContentLabel.isHidden = !PageContentViewController.word.definitions.isEmpty
+                noContentLabel.isHidden = !BaseContentViewController.word.definitions.isEmpty
             case .synonyms:
-                noContentLabel.isHidden = !PageContentViewController.word.synonyms.isEmpty
+                noContentLabel.isHidden = !BaseContentViewController.word.synonyms.isEmpty
             case .antonyms:
-                noContentLabel.isHidden = !PageContentViewController.word.antonyms.isEmpty
+                noContentLabel.isHidden = !BaseContentViewController.word.antonyms.isEmpty
             case .examples:
-                noContentLabel.isHidden = !PageContentViewController.word.examples.isEmpty
+                noContentLabel.isHidden = !BaseContentViewController.word.examples.isEmpty
             case .hindiTranslation:
-                noContentLabel.isHidden = ((PageContentViewController.word.hindiTranslation != nil))
+                noContentLabel.isHidden = ((BaseContentViewController.word.hindiTranslation != nil))
             }
         }
         
         if !noContentLabel.isHidden{
-            noContentLabel.text = "No \(wordInfoType.getString()) found for \(PageContentViewController.word.word!)"
+            noContentLabel.text = "No \(wordInfoType.getString()) found for \(BaseContentViewController.word.word!)"
         }
         
         tableView.isHidden = !noContentLabel.isHidden || activityIndicator.isAnimating
