@@ -1,6 +1,6 @@
 //
 //  WordModel.swift
-//  Skeleton
+// WordPower
 //
 //  Created by Best Peers on 16/10/17.
 //  Copyright © 2017 www.BestPeers.Skeleton. All rights reserved.

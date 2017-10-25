@@ -1,0 +1,6 @@
+framework module Pods_WordPower {
+  umbrella header "Pods-WordPower-umbrella.h"
+
+  export *
+  module * { export * }
+}

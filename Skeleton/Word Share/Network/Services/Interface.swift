@@ -1,6 +1,6 @@
 //
 //  Interface.swift
-//  Skeleton
+// WordPower
 //
 //  Created by Best Peers on 16/10/17.
 //  Copyright © 2017 www.BestPeers.Skeleton. All rights reserved.
@@ -28,5 +28,10 @@ class Interface: NSObject {
         }
         
         return true
+    }
+    
+    func failureResponse(message:String = Constants.kErrorMessage){
+        print(message)
+        interfaceBlock!(false, message)
     }
 }

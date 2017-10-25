@@ -1,6 +1,6 @@
 //
 //  CategoryInterface.swift
-//  Skeleton
+// WordPower
 //
 //  Created by BestPeers on 05/06/17.
 //  Copyright © 2017 BestPeers. All rights reserved.
@@ -17,18 +17,37 @@ class WordInterface: Interface {
             self.parseSuccessResponse(request:request, response:response as AnyObject)
         }
     }
+    
+    public func getTranslationInformation(request: WordRequest, completion: @escaping CompletionHandler) {
+        interfaceBlock = completion
+        
+        NetworkAPIClient().getTranslationObject(request: request) { (success, response) in
+            self.parseSuccessResponse(request:request, response:response as AnyObject)
+        }
+    }
 
     // MARK: Parse Response
 
     func parseSuccessResponse(request:WordRequest, response: AnyObject?) -> Void {
         if validateResponse(response: response!){
-            var success: Bool = true
             let responseDict = response as! Dictionary<String, Any>
             guard let wordItem = responseDict["word"] as? String else {
-
-                success = false
-                print(Constants.kErrorMessage)
-                interfaceBlock!(success, nil)
+                
+                guard let translatedText = responseDict["text"] else {
+                    failureResponse()
+                    return
+                    
+                }
+                let responseList = translatedText as! Array<AnyObject>
+                if responseDict.count > 0{
+                    let word:WordModel = WordModel()
+                    word.word = request.urlPath
+                    word.hindiTranslation = responseList[0] as? String
+                    interfaceBlock!(true, word)
+                    return
+                }
+                
+                failureResponse()
                 return
             }
             
@@ -75,7 +94,7 @@ class WordInterface: Interface {
                 }
             }
             
-            interfaceBlock!(success, word)
+            interfaceBlock!(true, word)
         }
     }
 }

@@ -27,8 +27,8 @@ class NetworkAPIClient: NSObject {
             }.resume()
     }
     
-    private func post(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
-        dataTask(request: request, method: "POST", completion: completion)
+    private func post(request: NSMutableURLRequest?, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
+        dataTask(request: request!, method: "POST", completion: completion)
     }
     
     private func put(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
@@ -68,10 +68,26 @@ class NetworkAPIClient: NSObject {
              }*/
             return request
         }
-    return nil
+        return nil
+    }
+    
+    private func translationClientURLRequest(path: String, params: Dictionary<String, AnyObject>? = nil) -> NSMutableURLRequest? {
+        
+        if let url:URL = URL(string: "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20171024T105142Z.903b3e1c791c4cd5.3de81202f9dda907aab4dafbe86006f16141a764&lang=hi&text=" + path) {
+            let request = NSMutableURLRequest(url: url)
+            request.setValue("*/*", forHTTPHeaderField: "Accept")
+            request.setValue("17", forHTTPHeaderField: "Content-Length")
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            return request
+        }
+        return nil
     }
     
     func getObject(request: Request, completion: @escaping CompletionHandler) -> Void {
         get(request: clientURLRequest(path: request.urlPath), completion: completion)
+    }
+    
+    func getTranslationObject(request: Request, completion: @escaping CompletionHandler) -> Void {
+        post(request: translationClientURLRequest(path: request.urlPath), completion: completion)
     }
 }

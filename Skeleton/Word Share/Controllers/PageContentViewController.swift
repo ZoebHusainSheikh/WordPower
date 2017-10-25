@@ -41,7 +41,7 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch wordInfoType {
-        case .definitions:
+        case .hindiTranslation:
             return PageContentViewController.word.definitions.count
         case .synonyms:
             return PageContentViewController.word.synonyms.count
@@ -49,7 +49,7 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
             return PageContentViewController.word.antonyms.count
         case .examples:
             return PageContentViewController.word.examples.count
-        case .hindiTranslation:
+        case .definitions:
             return 1
         }
     }
@@ -57,7 +57,7 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = (wordInfoType == .definitions) ? tableView.dequeueReusableCell(withIdentifier: "SubtitleCellIdentifier", for: indexPath) as! ContentTableViewCell : tableView.dequeueReusableCell(withIdentifier: "TitleCellIdentifier", for: indexPath) as! ContentTableViewCell
         switch wordInfoType {
-        case .definitions:
+        case .hindiTranslation:
             let dict = PageContentViewController.word.definitions[indexPath.row]
             if let definition = dict["definition"]{
                 
@@ -74,8 +74,8 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
             cell.updateContent(title: PageContentViewController.word.antonyms[indexPath.row], searchText: PageContentViewController.word.word!)
         case .examples:
             cell.updateContent(title: PageContentViewController.word.examples[indexPath.row], searchText: PageContentViewController.word.word!)
-        case .hindiTranslation:
-            cell.updateContent(title: (PageContentViewController.word.hindiTranslation)!, searchText: PageContentViewController.word.word!)
+        case .definitions:
+            cell.updateTranslationContent(title: PageContentViewController.word.hindiTranslation)
         }
         
         return cell
@@ -114,7 +114,7 @@ class PageContentViewController: UIViewController, UITableViewDataSource {
             case .examples:
                 noContentLabel.isHidden = !PageContentViewController.word.examples.isEmpty
             case .hindiTranslation:
-                noContentLabel.isHidden = !(PageContentViewController.word.hindiTranslation?.isEmpty)!
+                noContentLabel.isHidden = ((PageContentViewController.word.hindiTranslation != nil))
             }
         }
         

@@ -1,6 +1,6 @@
 //
 //  AppSettings.swift
-//  Skeleton
+// WordPower
 //
 //  Created by BestPeers on 01/06/17.
 //  Copyright © 2017 BestPeers. All rights reserved.

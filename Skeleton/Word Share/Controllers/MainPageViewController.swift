@@ -147,7 +147,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     func performAPICall(){
         NotificationCenter.default.post(name: Notification.Name("StartAnimationIdentifier"), object: nil)
         PageContentViewController.word.word = shareWord
-        RequestManager().getWordInformation(word: self.shareWord!) { (success, response) in
+        RequestManager().getTranslationInformation(word: self.shareWord!) { (success, response) in
             print(response ?? Constants.kErrorMessage)
             // Notify page content controllers
             DispatchQueue.main.async {

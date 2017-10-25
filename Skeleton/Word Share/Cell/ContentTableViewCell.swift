@@ -37,6 +37,15 @@ class ContentTableViewCell: UITableViewCell {
         }
     }
     
+    func updateTranslationContent(title:Any?) {
+        
+        self.titleLabel.text = title as? String
+        
+        if self.subtitleLabel != nil{
+            self.subtitleLabel.text = ""
+        }
+    }
+    
     func makeMatchingPartBold(searchText: String, title:String?) {
         
         // check label text & search text

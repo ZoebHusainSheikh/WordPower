@@ -1,5 +1,5 @@
 //
-//  Skeleton-Bridging-Header.h
+// WordPower-Bridging-Header.h
 //  
 //
 //  Created by BestPeers on 31/05/17.

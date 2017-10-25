@@ -95,7 +95,7 @@
 		9A6A2D011EF78BE40045FD53 /* RemoteNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6A2D001EF78BE40045FD53 /* RemoteNotificationManager.swift */; };
 		9AFE9A631EE5644800B1D6C3 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFE9A621EE5644800B1D6C3 /* RequestManager.swift */; };
 		9AFE9A661EE5721700B1D6C3 /* WordInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFE9A651EE5721700B1D6C3 /* WordInterface.swift */; };
-		EDFC0A0A8605273A44FE61E9 /* Pods_Skeleton.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06BF5BC2524B1EC194944A50 /* Pods_Skeleton.framework */; };
+		9E23A55D3A7D6A4ABD8D7DF9 /* Pods_WordPower.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C6BE896D9EEF665619F0325 /* Pods_WordPower.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,7 +123,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		06BF5BC2524B1EC194944A50 /* Pods_Skeleton.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Skeleton.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		481E62C81F95FFE200D74899 /* Word Share.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Word Share.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		481E62CD1F95FFE200D74899 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		481E62CF1F95FFE200D74899 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -147,6 +146,8 @@
 		4878156C1F9483A300873D9F /* Interface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interface.swift; sourceTree = "<group>"; };
 		4878156E1F948C2600873D9F /* WordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordModel.swift; sourceTree = "<group>"; };
 		4888A14E1F9DA75600DCA31C /* WordCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WordCollectionViewCell.xib; sourceTree = "<group>"; };
+		501B046B048B799AA68DA297 /* Pods-WordPower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPower.release.xcconfig"; path = "Pods/Target Support Files/Pods-WordPower/Pods-WordPower.release.xcconfig"; sourceTree = "<group>"; };
+		8C6BE896D9EEF665619F0325 /* Pods_WordPower.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WordPower.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A1D53A11EDEB2A800CCCBE7 /* WordPower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordPower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A1D53A41EDEB2A800CCCBE7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A1D53A91EDEB2A800CCCBE7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -218,8 +219,7 @@
 		9A6A2D001EF78BE40045FD53 /* RemoteNotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteNotificationManager.swift; sourceTree = "<group>"; };
 		9AFE9A621EE5644800B1D6C3 /* RequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
 		9AFE9A651EE5721700B1D6C3 /* WordInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordInterface.swift; sourceTree = "<group>"; };
-		BF82071E7FA08EEA19C8E6C9 /* Pods-Skeleton.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Skeleton.release.xcconfig"; path = "Pods/Target Support Files/Pods-Skeleton/Pods-Skeleton.release.xcconfig"; sourceTree = "<group>"; };
-		EC7980D5EE007CF1BCE1D3E8 /* Pods-Skeleton.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Skeleton.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Skeleton/Pods-Skeleton.debug.xcconfig"; sourceTree = "<group>"; };
+		FBC076351E87727B92C60281 /* Pods-WordPower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPower.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WordPower/Pods-WordPower.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,7 +234,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDFC0A0A8605273A44FE61E9 /* Pods_Skeleton.framework in Frameworks */,
+				9E23A55D3A7D6A4ABD8D7DF9 /* Pods_WordPower.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,8 +340,8 @@
 		53E5F7B68AE7AF0D47CFF920 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EC7980D5EE007CF1BCE1D3E8 /* Pods-Skeleton.debug.xcconfig */,
-				BF82071E7FA08EEA19C8E6C9 /* Pods-Skeleton.release.xcconfig */,
+				FBC076351E87727B92C60281 /* Pods-WordPower.debug.xcconfig */,
+				501B046B048B799AA68DA297 /* Pods-WordPower.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -603,7 +603,7 @@
 		AD308C9FF357B387CA84B8C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				06BF5BC2524B1EC194944A50 /* Pods_Skeleton.framework */,
+				8C6BE896D9EEF665619F0325 /* Pods_WordPower.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -733,7 +733,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Skeleton/Pods-Skeleton-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-WordPower/Pods-WordPower-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/KSCrash/KSCrash.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
@@ -764,7 +764,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Skeleton/Pods-Skeleton-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WordPower/Pods-WordPower-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E420A2036C9DFE7259A0C680 /* [CP] Copy Pods Resources */ = {
@@ -779,7 +779,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Skeleton/Pods-Skeleton-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WordPower/Pods-WordPower-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F697B037A21817D5676F8A21 /* [CP] Check Pods Manifest.lock */ = {
@@ -793,7 +793,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Skeleton-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-WordPower-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1087,7 +1087,7 @@
 		};
 		9A1D53B71EDEB2A800CCCBE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EC7980D5EE007CF1BCE1D3E8 /* Pods-Skeleton.debug.xcconfig */;
+			baseConfigurationReference = FBC076351E87727B92C60281 /* Pods-WordPower.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1108,7 +1108,7 @@
 		};
 		9A1D53B81EDEB2A800CCCBE7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BF82071E7FA08EEA19C8E6C9 /* Pods-Skeleton.release.xcconfig */;
+			baseConfigurationReference = 501B046B048B799AA68DA297 /* Pods-WordPower.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

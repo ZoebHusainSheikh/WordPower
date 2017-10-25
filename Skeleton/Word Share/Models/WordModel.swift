@@ -1,6 +1,6 @@
 //
 //  WordModel.swift
-//  Skeleton
+// WordPower
 //
 //  Created by Best Peers on 16/10/17.
 //  Copyright © 2017 www.BestPeers.Skeleton. All rights reserved.
@@ -38,5 +38,5 @@ class WordModel: NSObject {
     var synonyms: Array<String> = []
     var antonyms: Array<String> = []
     var examples: Array<String> = []
-    var hindiTranslation:String? = nil
+    var hindiTranslation:String?
 }

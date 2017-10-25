@@ -1,6 +1,6 @@
 //
 //  RemoteNotificationManager.swift
-//  Skeleton
+// WordPower
 //
 //  Created by BestPeers on 19/06/17.
 //  Copyright © 2017 www.BestPeers.Skeleton. All rights reserved.

@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_SkeletonVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_SkeletonVersionString[];
+FOUNDATION_EXPORT double Pods_WordPowerVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_WordPowerVersionString[];
 
