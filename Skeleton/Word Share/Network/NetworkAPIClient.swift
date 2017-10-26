@@ -46,42 +46,33 @@ class NetworkAPIClient: NSObject {
     }
     
     private func clientURLRequest(path: String, params: Dictionary<String, AnyObject>? = nil) -> NSMutableURLRequest? {
-        
-        if let url:URL = URL(string: "https://wordsapiv1.p.mashape.com/words/"+path) {
+        if let url:URL = URL(string: path) {
             let request = NSMutableURLRequest(url: url)
             request.setValue("gffsVZi52omsh52gxrT335Shh8aNp128WjajsnahxEMl6530yo", forHTTPHeaderField: "X-Mashape-Key")
             request.setValue("application/json", forHTTPHeaderField: "Accept")
-            /*if let params = params {
-             var paramString = ""
-             for (key, value) in params {
-             let escapedKey = key.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())
-             let escapedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())
-             paramString += "\(escapedKey)=\(escapedValue)&"
-             }
-             
-             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-             request.HTTPBody = paramString.dataUsingEncoding(NSUTF8StringEncoding)
-             }
-             
-             if let token = token {
-             request.addValue("Bearer "+token, forHTTPHeaderField: "Authorization")
-             }*/
             return request
         }
         return nil
     }
     
     private func translationClientURLRequest(path: String, params: Dictionary<String, AnyObject>? = nil) -> NSMutableURLRequest? {
-        
-        if let url:URL = URL(string: "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20171024T105142Z.903b3e1c791c4cd5.3de81202f9dda907aab4dafbe86006f16141a764&lang=hi") {
+        if let url:URL = URL(string: path) {
             let request = NSMutableURLRequest(url: url)
             request.setValue("*/*", forHTTPHeaderField: "Accept")
-            request.setValue("17", forHTTPHeaderField: "Content-Length")
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             
-            let escapedValue = path.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-            let paramString = "text=\(escapedValue ?? path)&"
-            request.httpBody = paramString.data(using: String.Encoding.utf8)
+            if params != nil && (params?.count)! > 0{
+                request.setValue("17", forHTTPHeaderField: "Content-Length")
+                
+                var paramString = ""
+                for (key, value) in params! {
+                    let escapedKey = key.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                    let escapedValue = value.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                    paramString += "\(escapedKey)=\(escapedValue)&"
+                }
+                request.httpBody = paramString.data(using: String.Encoding.utf8)
+            }
+            
             
             return request
         }
@@ -89,10 +80,14 @@ class NetworkAPIClient: NSObject {
     }
     
     func getObject(request: Request, completion: @escaping CompletionHandler) -> Void {
-        get(request: clientURLRequest(path: request.urlPath), completion: completion)
+        get(request: clientURLRequest(path: request.urlPath, params:request.parameters), completion: completion)
     }
     
     func getTranslationObject(request: Request, completion: @escaping CompletionHandler) -> Void {
-        post(request: translationClientURLRequest(path: request.urlPath), completion: completion)
+        post(request: translationClientURLRequest(path: request.urlPath, params:request.parameters), completion: completion)
+    }
+    
+    func getLangsTranslationObject(request: Request, completion: @escaping CompletionHandler) -> Void {
+        get(request: translationClientURLRequest(path: request.urlPath), completion: completion)
     }
 }

@@ -23,9 +23,10 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! WordCollectionViewCell
+        cell.index = indexPath.row
         cell.textLabel.text = arrPageTitle[indexPath.row] as? String
-        
-        if (indexPath.row == 0){
+        clearCollectionViewSelection()
+        if (indexPath.row == selectedPageIndex){
             cell.textLabel.textColor = UIColor.white
             cell.backgroungTabImageView.image = UIImage(named: "SelectedTab")
         }
@@ -40,19 +41,11 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if(selectedPageIndex != indexPath.item){
-            for cell in collectionView.visibleCells {
-                (cell as! WordCollectionViewCell).textLabel.textColor = UIColor.lightGray
-                (cell as! WordCollectionViewCell).backgroungTabImageView.image = UIImage(named: "UnSelectedTab")
-            }
-            if let cell = collectionView.cellForItem(at: indexPath) as! WordCollectionViewCell? {
-                cell.textLabel.textColor = UIColor.white
-                cell.backgroungTabImageView.image = UIImage(named: "SelectedTab")
-            }
-            
             selectPageAtIndex(index: indexPath.item)
             selectedPageIndex = indexPath.item
             
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            collectionView.reloadData()
         }
     }
     
@@ -85,6 +78,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.performTranslationAPICall), name:NSNotification.Name("PerformTranslatorAPICallIdentifier"), object: nil)
         BaseContentViewController.word = WordModel()
         arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"];
         for index in 0..<arrPageTitle.count {
@@ -147,6 +141,14 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         return true
     }
     
+    func clearCollectionViewSelection(){
+        for cell in collectionView.visibleCells {
+            let isSelectedCell:Bool = ((cell as! WordCollectionViewCell).index == selectedPageIndex)
+            (cell as! WordCollectionViewCell).textLabel.textColor = isSelectedCell ? UIColor.white : UIColor.lightGray
+            (cell as! WordCollectionViewCell).backgroungTabImageView.image = UIImage(named: isSelectedCell ? "SelectedTab" : "UnSelectedTab")
+        }
+    }
+    
     func performAPICall(){
         NotificationCenter.default.post(name: Notification.Name("StartAnimationIdentifier"), object: nil)
         BaseContentViewController.word.word = shareWord
@@ -166,7 +168,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
     }
     
-    func performTranslationAPICall(){
+    @objc func performTranslationAPICall(){
         NotificationCenter.default.post(name: Notification.Name("StartTranslatorAnimationIdentifier"), object: nil)
         RequestManager().getTranslationInformation(word: self.shareWord!) { (success, response) in
             print(response ?? Constants.kErrorMessage)

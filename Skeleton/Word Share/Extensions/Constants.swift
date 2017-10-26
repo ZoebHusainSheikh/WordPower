@@ -46,5 +46,23 @@ struct Constants {
     static let LocalEnviroment = "LOCAL"
     static let StagingEnviroment = "STAGING"
     static let LiveEnviroment = "LIVE"
+    
+    static func getDefaultLanguageCode() -> String {
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers.WordPower") {
+            
+            if let defaultLanguage = userDefaults.string(forKey: "defaultLanguage"){
+                return defaultLanguage
+            }
+        }
+        
+        return Locale.current.languageCode ?? "en"
+    }
+    
+    static func setDefaultLanguageCode(language:String){
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers.WordPower") {
+            userDefaults.set(language, forKey: "defaultLanguage")
+            userDefaults.synchronize()
+        }
+    }
 }
-//typedef void (^completionBlock)(BOOL success, id response);
+

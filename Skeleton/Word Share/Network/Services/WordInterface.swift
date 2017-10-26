@@ -25,9 +25,17 @@ class WordInterface: Interface {
             self.parseSuccessResponse(request:request, response:response as AnyObject)
         }
     }
+    
+    public func getTranslationLangs(request: WordRequest, completion: @escaping CompletionHandler) {
+        interfaceBlock = completion
+        
+        NetworkAPIClient().getLangsTranslationObject(request: request) { (success, response) in
+            self.parseGetLangsSuccessResponse(request:request, response:response as AnyObject)
+        }
+    }
 
     // MARK: Parse Response
-
+    
     func parseSuccessResponse(request:WordRequest, response: AnyObject?) -> Void {
         if validateResponse(response: response!){
             let responseDict = response as! Dictionary<String, Any>
@@ -95,6 +103,18 @@ class WordInterface: Interface {
             }
             
             interfaceBlock!(true, word)
+        }
+    }
+    
+    func parseGetLangsSuccessResponse(request:WordRequest, response: AnyObject?) -> Void {
+        if validateResponse(response: response!){
+            let responseDict = response as! Dictionary<String, Any>
+            guard let langs = responseDict["langs"] as? Dictionary<String,String> else {
+                failureResponse()
+                return
+            }
+            
+            interfaceBlock!(true, langs)
         }
     }
 }

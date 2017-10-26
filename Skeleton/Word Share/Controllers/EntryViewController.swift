@@ -39,3 +39,4 @@ class EntryViewController : UINavigationController {
 //TODO: Resolve 1st time nothing happen issue
 //TODO: Resolve warnings
 //TODO: Resolve Orientation issue
+// Voice recognition

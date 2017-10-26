@@ -17,6 +17,11 @@ class RequestManager: NSObject {
     
     // MARK: - Traslation API
     func getTranslationInformation(word:String, completion:@escaping CompletionHandler){
-        WordInterface().getTranslationInformation(request: WordRequest().initWordRequest(word: word), completion: completion)
+        WordInterface().getTranslationInformation(request: WordRequest().initTranslatorRequest(word: word), completion: completion)
+    }
+    
+    // MARK: - Traslation Languages API
+    func getLangsList(completion:@escaping CompletionHandler){
+        WordInterface().getTranslationLangs(request: WordRequest().initGetLangsRequest(), completion: completion)
     }
 }

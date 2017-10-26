@@ -17,7 +17,7 @@ class Request: NSObject {
     var fileName: String
     var mimeType: String
     var headers: [String: String]?
-    var parameters: Dictionary<String, Any>
+    var parameters: Dictionary<String, AnyObject>
     
     override init() {
         urlPath = ""

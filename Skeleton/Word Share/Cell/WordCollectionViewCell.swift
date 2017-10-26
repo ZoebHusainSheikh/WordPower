@@ -9,7 +9,7 @@
 import UIKit
 
 class WordCollectionViewCell: UICollectionViewCell {
-    
+    var index:Int = 0
     @IBOutlet weak var backgroungTabImageView: UIImageView!
     @IBOutlet weak var textLabel: UILabel!
     required init?(coder aDecoder: NSCoder) {
