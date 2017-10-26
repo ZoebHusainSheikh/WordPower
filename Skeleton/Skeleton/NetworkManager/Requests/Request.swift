@@ -17,7 +17,7 @@ class Request: NSObject {
     var fileName: String
     var mimeType: String
     var headers: [String: String]?
-    var parameters: Dictionary<String, Any>
+    var parameters: Dictionary<String, AnyObject>
     
     override init() {
         urlPath = ""
@@ -30,7 +30,7 @@ class Request: NSObject {
         super.init()
     }
     
-    public func getParams() -> Dictionary<String, Any> {
+    public func getParams() -> Dictionary<String, AnyObject> {
         return parameters
     }
 }

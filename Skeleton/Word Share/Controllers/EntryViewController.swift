@@ -40,3 +40,4 @@ class EntryViewController : UINavigationController {
 //TODO: Resolve warnings
 //TODO: Resolve Orientation issue
 // Voice recognition
+// close keyboard on touch outside

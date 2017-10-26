@@ -29,4 +29,9 @@ class Interface: NSObject {
         
         return true
     }
+    
+    func failureResponse(message:String = Constants.kErrorMessage){
+        print(message)
+        interfaceBlock!(false, message)
+    }
 }

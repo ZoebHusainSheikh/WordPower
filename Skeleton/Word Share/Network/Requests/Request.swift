@@ -30,7 +30,7 @@ class Request: NSObject {
         super.init()
     }
     
-    public func getParams() -> Dictionary<String, Any> {
+    public func getParams() -> Dictionary<String, AnyObject> {
         return parameters
     }
 }

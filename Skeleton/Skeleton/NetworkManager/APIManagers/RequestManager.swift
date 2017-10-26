@@ -10,14 +10,14 @@ import UIKit
 
 class RequestManager: NSObject {
     
-    //MARK: Word API 
-    func getWordInformation(word:String, wordInfoType:WordInfoType, completion:@escaping CompletionHandler){
-        if ApplicationDelegate.isNetworkAvailable{
-            WordInterface().getWordInformation(request: WordRequest().initWordRequest(word: word, wordInfoType: wordInfoType), completion: completion)
-        }
-        else{
-            completion(false, Constants.kNoNetworkMessage)
-            BannerManager.showFailureBanner(subtitle: Constants.kNoNetworkMessage)
-        }
+    
+    // MARK: - Traslation API
+    func getTranslationInformation(word:String, completion:@escaping CompletionHandler){
+        WordInterface().getTranslationInformation(request: WordRequest().initTranslatorRequest(word: word), completion: completion)
+    }
+    
+    // MARK: - Traslation Languages API
+    func getLangsList(completion:@escaping CompletionHandler){
+        WordInterface().getTranslationLangs(request: WordRequest().initGetLangsRequest(), completion: completion)
     }
 }

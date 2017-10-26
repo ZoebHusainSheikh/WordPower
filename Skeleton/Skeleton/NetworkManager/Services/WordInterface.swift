@@ -16,33 +16,52 @@ class WordInterface: Interface {
             self.parseSuccessResponse(request:request, response:response as AnyObject)
         }
     }
-
+    
+    public func getTranslationInformation(request: WordRequest, completion: @escaping CompletionHandler) {
+        interfaceBlock = completion
+        
+        NetworkAPIClient().getTranslationObject(request: request) { (success, response) in
+            self.parseSuccessResponse(request:request, response:response as AnyObject)
+        }
+    }
+    
+    public func getTranslationLangs(request: WordRequest, completion: @escaping CompletionHandler) {
+        interfaceBlock = completion
+        
+        NetworkAPIClient().getLangsTranslationObject(request: request) { (success, response) in
+            self.parseGetLangsSuccessResponse(request:request, response:response as AnyObject)
+        }
+    }
+    
     // MARK: Parse Response
-
+    
     func parseSuccessResponse(request:WordRequest, response: AnyObject?) -> Void {
         if validateResponse(response: response!){
-            var success: Bool = true
             let responseDict = response as! Dictionary<String, Any>
-            
-            let word:WordModel = WordModel()
-            word.word = responseDict["word"] as? String
-            
-            switch request.wordInfoType
-            {
-            case .definitions:
-                word.definitions = responseDict["definitions"] as! Array<Dictionary<String, AnyObject>>
-            case .synonyms:
-                word.synonyms = responseDict["synonyms"] as! Array<String>
-            case .antonyms:
-                word.antonyms = responseDict["antonyms"] as! Array<String>
-            case .examples:
-                word.examples = responseDict["examples"] as! Array<String>
-            default:
-                success = false
-                print(Constants.kErrorMessage)
+            guard let translatedText = responseDict["text"] else {
+                failureResponse()
+                return
+                
+            }
+            let responseList = translatedText as! Array<AnyObject>
+            if responseDict.count > 0{
+                interfaceBlock!(true, responseList[0] as? String)
+                return
             }
             
-            interfaceBlock!(success, word)
+            failureResponse()
+        }
+    }
+    
+    func parseGetLangsSuccessResponse(request:WordRequest, response: AnyObject?) -> Void {
+        if validateResponse(response: response!){
+            let responseDict = response as! Dictionary<String, Any>
+            guard let langs = responseDict["langs"] as? Dictionary<String,String> else {
+                failureResponse()
+                return
+            }
+            
+            interfaceBlock!(true, langs)
         }
     }
 }

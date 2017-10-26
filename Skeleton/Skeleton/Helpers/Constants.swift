@@ -10,11 +10,12 @@ import Foundation
 import UIKit
 
 let ApplicationDelegate = UIApplication.shared.delegate as! AppDelegate
+
 typealias CompletionHandler = (_ success: Bool, _ response: Any?) -> Void
 
 struct Constants {
-
-    // MARK: General Constants
+    
+    // MARK: - General Constants
     static let DeviceTokenKey = "device_token"
     static let DeviceInfoKey = "device_info"
     static let DeviceTypeKey = "device_type"
@@ -22,10 +23,10 @@ struct Constants {
     static let kErrorMessage = "Something went wrong while processing your request"
     static let kNoNetworkMessage = "No network available"
     
-    // MARK: User Defaults
+    // MARK: - User Defaults
     static let UserDefaultsDeviceTokenKey = "DeviceTokenKey"
     
-    // MARK: Enums
+    // MARK: - Enums
     enum RequestType: NSInteger {
         case GET
         case POST
@@ -34,18 +35,37 @@ struct Constants {
         case PUT
     }
     
-    // MARK: Numerical Constants
+    // MARK: - Numerical Constants
     static let StatusSuccess = 1
     static let ResponseStatusSuccess = 200
     static let ResponseStatusCreated = 201
     static let ResponseStatusAccepted = 202
     static let ResponseStatusForbidden = 401
     
-    // MARK: Network Keys
+    // MARK: - Network Keys
     static let InsecureProtocol = "http://"
     static let SecureProtocol = "https://"
     static let LocalEnviroment = "LOCAL"
     static let StagingEnviroment = "STAGING"
     static let LiveEnviroment = "LIVE"
+    
+    static func getDefaultLanguageCode() -> String {
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers.WordPower.Word-Share") {
+            
+            if let defaultLanguage = userDefaults.string(forKey: "defaultLanguage"){
+                return defaultLanguage
+            }
+        }
+        
+        return Locale.current.languageCode ?? "en"
+    }
+    
+    static func setDefaultLanguageCode(language:String){
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers.WordPower.Word-Share") {
+            userDefaults.set(language, forKey: "defaultLanguage")
+            userDefaults.synchronize()
+        }
+    }
 }
-//typedef void (^completionBlock)(BOOL success, id response);
+
+
