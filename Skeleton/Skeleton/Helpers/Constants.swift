@@ -50,7 +50,7 @@ struct Constants {
     static let LiveEnviroment = "LIVE"
     
     static func getDefaultLanguageCode() -> String {
-        if let userDefaults = UserDefaults(suiteName: "com.BestPeers.WordPower.Word-Share") {
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers1.WordPower.Word-Share") {
             
             if let defaultLanguage = userDefaults.string(forKey: "defaultLanguage"){
                 return defaultLanguage
@@ -61,7 +61,7 @@ struct Constants {
     }
     
     static func setDefaultLanguageCode(language:String){
-        if let userDefaults = UserDefaults(suiteName: "com.BestPeers.WordPower.Word-Share") {
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers1.WordPower.Word-Share") {
             userDefaults.set(language, forKey: "defaultLanguage")
             userDefaults.synchronize()
         }

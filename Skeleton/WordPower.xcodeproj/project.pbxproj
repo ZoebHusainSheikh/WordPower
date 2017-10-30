@@ -523,7 +523,7 @@
 				TargetAttributes = {
 					481E62C71F95FFE200D74899 = {
 						CreatedOnToolsVersion = 9.0;
-						DevelopmentTeam = 62KKE3EAR8;
+						DevelopmentTeam = NTQL8DHG79;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -533,7 +533,7 @@
 					};
 					9A1D53A01EDEB2A800CCCBE7 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 62KKE3EAR8;
+						DevelopmentTeam = NTQL8DHG79;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -770,12 +770,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "Word Share/Word Share.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 62KKE3EAR8;
+				DEVELOPMENT_TEAM = NTQL8DHG79;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Word Share/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.BestPeers.WordPower.Word-Share";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.BestPeers1.WordPowerApp.Word-Share";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
@@ -797,12 +797,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "Word Share/Word Share.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 62KKE3EAR8;
+				DEVELOPMENT_TEAM = NTQL8DHG79;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Word Share/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.BestPeers.WordPower.Word-Share";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.BestPeers1.WordPowerApp.Word-Share";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
@@ -928,11 +928,11 @@
 				CODE_SIGN_ENTITLEMENTS = WordPower.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 62KKE3EAR8;
+				DEVELOPMENT_TEAM = NTQL8DHG79;
 				INFOPLIST_FILE = Skeleton/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.BestPeers.WordPower;
+				PRODUCT_BUNDLE_IDENTIFIER = com.BestPeers1.WordPowerApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Skeleton/Supporting Files/Skeleton-Bridging-Header.h";
@@ -949,11 +949,11 @@
 				CODE_SIGN_ENTITLEMENTS = WordPower.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 62KKE3EAR8;
+				DEVELOPMENT_TEAM = NTQL8DHG79;
 				INFOPLIST_FILE = Skeleton/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.BestPeers.WordPower;
+				PRODUCT_BUNDLE_IDENTIFIER = com.BestPeers1.WordPowerApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Skeleton/Supporting Files/Skeleton-Bridging-Header.h";

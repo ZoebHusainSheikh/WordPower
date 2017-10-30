@@ -9,12 +9,15 @@
 import UIKit
 import Social
 import MobileCoreServices
+import AVFoundation
 
 class MainPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var viewControllerList:[UIViewController] = []
     var selectedPageIndex:Int = 0
     var shareWord:String? = nil
+    let synth = AVSpeechSynthesizer()
+    var myUtterance = AVSpeechUtterance(string: "")
     
     // MARK: - CollectionView Datasource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -104,9 +107,18 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         navigationController?.navigationBar.backgroundColor = UIColor.white
         navigationController?.navigationBar.tintColor = UIColor.init(red: 44.0/255.0, green:  193.0/255.0, blue:  133.0/255.0, alpha: 1.0) // Green color Theme
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainPageViewController.saveButtonTapped(sender:)))
-        
+        leftBarButton()
         view.addSubview(collectionView)
         self.view.isUserInteractionEnabled = false
+    }
+    
+    private func leftBarButton(){
+        let button = UIButton.init(type: .custom)
+        button.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
+        button.addTarget(self, action:#selector(MainPageViewController.speakerButtonTapped(sender:)), for:.touchUpInside)
+        button.frame = CGRect.init(x: 0, y: 0, width: 32, height: 32)
+        let barButton = UIBarButtonItem.init(customView: button)
+        self.navigationItem.leftBarButtonItem = barButton
     }
     
     private func setupShareWord(){
@@ -230,6 +242,10 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         })
     }
     
+    @objc func speakerButtonTapped(sender: UIBarButtonItem) {
+        myUtterance = AVSpeechUtterance(string: shareWord ?? "")
+        synth.speak(myUtterance)
+    }
     
     // MARK: - UIPageVieControllerDelegate Methods
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {

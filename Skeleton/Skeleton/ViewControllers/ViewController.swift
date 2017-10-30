@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import Speech
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, SFSpeechRecognizerDelegate {
     
+    @IBOutlet weak var speechButton: UIButton!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var tableView: UITableView!
@@ -17,13 +19,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var noContentLabel: UILabel!
     @IBOutlet weak var yandrexButton: UIButton!
     
+    // MARK: Translation variables
     var hindiTranslation:String?
     var langsInfo:Dictionary<String, String> = [:]
-
+    
+    // MARK: Speech Recognition Variables
+    let audioEngine = AVAudioEngine()
+    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
+    var request = SFSpeechAudioBufferRecognitionRequest()
+    var recognitionTask: SFSpeechRecognitionTask?
+    var timer:Timer?
+    
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         performGetLangsAPICall()
+        self.requestSpeechAuthorization()
     }
 
     override func didReceiveMemoryWarning() {
@@ -91,6 +103,106 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    private func startTimer(){
+        stopTimer();
+        timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(performTranslationAPICall), userInfo: nil, repeats: false)
+    }
+    
+    private func stopTimer(){
+        if (timer != nil)
+        {
+            timer?.invalidate()
+            self.timer = nil;
+        }
+    }
+    
+    func recordAndRecognizeSpeech(){
+        let node = audioEngine.inputNode
+        let recordingFormat = node.outputFormat(forBus: 0)
+        node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
+            self.request.append(buffer)
+        }
+        audioEngine.prepare()
+        do {
+            try audioEngine.start()
+        } catch {
+            self.sendAlert(message: "There has been an audio engine error.")
+            return print(error)
+        }
+        guard let myRecognizer = SFSpeechRecognizer() else {
+            self.sendAlert(message: "Speech recognition is not supported for your current locale.")
+            return
+        }
+        if !myRecognizer.isAvailable {
+            self.sendAlert(message: "Speech recognition is not currently available. Check back at a later time.")
+            // Recognizer is not available right now
+            return
+        }
+        recognitionTask = speechRecognizer?.recognitionTask(with: request, resultHandler: { result, error in
+            if let result = result {
+                
+                let bestString = result.bestTranscription.formattedString
+                
+                var lastString: String = ""
+                for segment in result.bestTranscription.segments {
+                    let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
+                    lastString = String(bestString[indexTo...])
+                }
+                if lastString.capitalized == "Done"{
+                    self.textField.text = ""
+                    self.speechButtonTapped(self.speechButton)
+                }
+                else {
+                    self.textField.text = bestString
+                    
+                    //perform API call after few sec
+                    self.startTimer()
+                }
+                
+            } else if let error = error {
+//                self.sendAlert(message: "There has been a speech recognition error.")
+                print(error)
+            }
+        })
+    }
+    
+    func cancelRecording() {
+        DispatchQueue.main.async {
+            if(self.audioEngine.isRunning){
+                let node = self.audioEngine.inputNode
+                node.removeTap(onBus: 0)
+                node.reset()
+                self.audioEngine.stop()
+                self.request.endAudio()
+                self.recognitionTask?.cancel()
+                self.recognitionTask = nil;
+                self.request = SFSpeechAudioBufferRecognitionRequest()
+            }
+        }
+    }
+    
+    //MARK: - Check Authorization Status
+    
+    func requestSpeechAuthorization() {
+        SFSpeechRecognizer.requestAuthorization { authStatus in
+            OperationQueue.main.addOperation {
+                switch authStatus {
+                case .authorized:
+                    self.speechButton.isEnabled = true
+                case .denied:
+                    self.speechButton.isEnabled = false
+                    self.textField.text = "User denied access to speech recognition"
+                case .restricted:
+                    self.speechButton.isEnabled = false
+                    self.textField.text = "Speech recognition restricted on this device"
+                case .notDetermined:
+                    self.speechButton.isEnabled = false
+                    self.textField.text = "Speech recognition not yet authorized"
+                }
+            }
+        }
+    }
+    
     // MARK: - UITextField Delegate Methods
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
@@ -99,11 +211,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return true
     }
     
+    func textFieldShouldClear(_ textField: UITextField) -> Bool{
+        cancelRecording()
+        speechButton.isSelected = false
+        return true
+    }
+    
     // MARK: - IBActions
     
     @IBAction func yandrexButtonTapped(_ sender: Any) {
         let url = NSURL(string: "http://translate.yandex.com/")! as URL
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    @IBAction func speechButtonTapped(_ sender: UIButton) {
+        if sender.isSelected {
+            cancelRecording()
+            sender.isSelected = false
+        } else {
+            self.recordAndRecognizeSpeech()
+            sender.isSelected = true
+        }
     }
     
     // MARK: - API calls
@@ -123,7 +251,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func performTranslationAPICall(){
+    @objc func performTranslationAPICall(){
         if (textField.text?.count)! > 0 {
             startAnimation()
             RequestManager().getTranslationInformation(word: textField.text!) { (success, response) in
@@ -139,5 +267,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
 
+    
+    //MARK: - Alert
+    
+    func sendAlert(message: String) {
+        let alert = UIAlertController(title: "Speech Recognizer Error", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 

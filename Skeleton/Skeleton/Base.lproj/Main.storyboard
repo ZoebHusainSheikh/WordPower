@@ -26,13 +26,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Type text" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ydf-rC-sls">
-                                <rect key="frame" x="15" y="20" width="345" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Type text" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ydf-rC-sls">
+                                <rect key="frame" x="15" y="20" width="325" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="O3n-rp-21m"/>
                                 </constraints>
                                 <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="go"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="1w1-9m-kr8"/>
@@ -51,7 +51,7 @@
                                 <rect key="frame" x="0.0" y="271" width="375" height="353"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TitleCellIdentifier" textLabel="wlg-63-Gqz" rowHeight="50" style="IBUITableViewCellStyleDefault" id="72m-84-pRN" customClass="ContentTableViewCell" customModule="Word_Share" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TitleCellIdentifier" textLabel="wlg-63-Gqz" rowHeight="50" style="IBUITableViewCellStyleDefault" id="72m-84-pRN" customClass="ContentTableViewCell" customModule="WordPower" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="72m-84-pRN" id="I7Q-tN-iyS">
@@ -103,21 +103,35 @@
                                     <action selector="yandrexButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0r4-He-nx7"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9bw-Sh-Njc">
+                                <rect key="frame" x="345" y="20" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="E45-o9-Vbh"/>
+                                    <constraint firstAttribute="width" constant="30" id="UUb-Gz-qd5"/>
+                                </constraints>
+                                <state key="normal" image="mic_off"/>
+                                <state key="selected" image="mic_on"/>
+                                <connections>
+                                    <action selector="speechButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LA1-oL-MHS"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.89351505040000001" green="0.91400539879999998" blue="0.90567952389999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="YTb-WY-tOu" firstAttribute="centerY" secondItem="8jG-8E-Iew" secondAttribute="centerY" id="370-cr-3NU"/>
                             <constraint firstItem="ydf-rC-sls" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="6Jw-Ga-mHK"/>
-                            <constraint firstAttribute="trailing" secondItem="ydf-rC-sls" secondAttribute="trailing" constant="15" id="7gJ-dF-Rt9"/>
                             <constraint firstAttribute="trailing" secondItem="OAp-hI-vci" secondAttribute="trailing" id="9Lq-53-ERA"/>
                             <constraint firstItem="YTb-WY-tOu" firstAttribute="centerX" secondItem="8jG-8E-Iew" secondAttribute="centerX" id="G5M-jb-ic8"/>
+                            <constraint firstAttribute="trailing" secondItem="9bw-Sh-Njc" secondAttribute="trailing" id="IDK-Jt-ej6"/>
                             <constraint firstItem="ydf-rC-sls" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="15" id="LVe-Xq-wnV"/>
+                            <constraint firstItem="9bw-Sh-Njc" firstAttribute="leading" secondItem="ydf-rC-sls" secondAttribute="trailing" constant="5" id="REE-5g-GjA"/>
                             <constraint firstItem="8jG-8E-Iew" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="15" id="VuG-Sa-KLj"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="FQj-rU-oFy" secondAttribute="bottom" constant="5" id="XaO-4f-1tZ"/>
                             <constraint firstItem="Aps-fL-zXe" firstAttribute="centerX" secondItem="8jG-8E-Iew" secondAttribute="centerX" id="cFd-yL-0Al"/>
                             <constraint firstItem="OAp-hI-vci" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="cLj-Oq-1kj"/>
                             <constraint firstItem="8jG-8E-Iew" firstAttribute="top" secondItem="ydf-rC-sls" secondAttribute="bottom" constant="8" id="dZI-kd-yQi"/>
                             <constraint firstItem="FQj-rU-oFy" firstAttribute="top" secondItem="OAp-hI-vci" secondAttribute="bottom" constant="8" id="epU-4u-9xQ"/>
+                            <constraint firstItem="9bw-Sh-Njc" firstAttribute="centerY" secondItem="ydf-rC-sls" secondAttribute="centerY" id="iod-3V-wah"/>
                             <constraint firstAttribute="trailing" secondItem="FQj-rU-oFy" secondAttribute="trailing" constant="5" id="jC8-HF-txg"/>
                             <constraint firstItem="Aps-fL-zXe" firstAttribute="centerY" secondItem="8jG-8E-Iew" secondAttribute="centerY" id="o56-04-Vs7"/>
                             <constraint firstItem="OAp-hI-vci" firstAttribute="top" secondItem="8jG-8E-Iew" secondAttribute="bottom" id="piO-K8-qCa"/>
@@ -128,6 +142,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="Aps-fL-zXe" id="7Gk-BX-HRt"/>
                         <outlet property="noContentLabel" destination="YTb-WY-tOu" id="C8U-lC-2sJ"/>
+                        <outlet property="speechButton" destination="9bw-Sh-Njc" id="4qf-fD-830"/>
                         <outlet property="tableView" destination="OAp-hI-vci" id="3y9-Io-RDY"/>
                         <outlet property="textField" destination="ydf-rC-sls" id="ezv-Z8-snG"/>
                         <outlet property="textView" destination="8jG-8E-Iew" id="Pe4-bX-HBe"/>
@@ -139,4 +154,8 @@
             <point key="canvasLocation" x="136.80000000000001" y="93.103448275862078"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="mic_off" width="128" height="128"/>
+        <image name="mic_on" width="128" height="128"/>
+    </resources>
 </document>

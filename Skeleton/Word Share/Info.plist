@@ -30,10 +30,10 @@
 				<true/>
 			</dict>
 		</dict>
-		<key>NSExtensionPrincipalClass</key>
-		<string>EntryViewController</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>EntryViewController</string>
 	</dict>
 </dict>
 </plist>
