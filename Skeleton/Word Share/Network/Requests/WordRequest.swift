@@ -11,7 +11,8 @@ import UIKit
 class WordRequest: Request {
     
     func initWordRequest(word:String) -> WordRequest{
-        let path:String = "https://wordsapiv1.p.mashape.com/words/"+word
+        let searchWord:String = word.components(separatedBy: " ").first!
+        let path:String = "https://wordsapiv1.p.mashape.com/words/"+searchWord
         urlPath = path.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         return self
     }

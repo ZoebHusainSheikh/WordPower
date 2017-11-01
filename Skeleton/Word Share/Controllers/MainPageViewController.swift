@@ -18,6 +18,168 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     var shareWord:String? = nil
     let synth = AVSpeechSynthesizer()
     var myUtterance = AVSpeechUtterance(string: "")
+    var arrPageTitle: NSArray = NSArray()
+    
+    // MARK: - View Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.performTranslationAPICall), name:NSNotification.Name("PerformTranslatorAPICallIdentifier"), object: nil)
+        BaseContentViewController.word = WordModel()
+        arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"];
+        for index in 0..<arrPageTitle.count {
+            viewControllerList.append(getViewControllerAtIndex(index: index))
+        }
+        
+        self.dataSource = self
+        self.delegate = self
+        self.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+        setupUI()
+        setupShareWord()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupUI() {
+        self.navigationItem.title = "Word Power"
+        navigationController?.navigationBar.backgroundColor = UIColor.white
+        navigationController?.navigationBar.tintColor = UIColor.init(red: 44.0/255.0, green:  193.0/255.0, blue:  133.0/255.0, alpha: 1.0) // Green color Theme
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainPageViewController.saveButtonTapped(sender:)))
+        leftBarButton()
+        view.addSubview(collectionView)
+        self.view.isUserInteractionEnabled = false
+    }
+    
+    private func leftBarButton(){
+        let button = UIButton.init(type: .custom)
+        button.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
+        button.addTarget(self, action:#selector(MainPageViewController.speakerButtonTapped(sender:)), for:.touchUpInside)
+        button.frame = CGRect.init(x: 0, y: 0, width: 32, height: 32)
+        let barButton = UIBarButtonItem.init(customView: button)
+        self.navigationItem.leftBarButtonItem = barButton
+    }
+    
+    private func setupShareWord(){
+        let extensionItem = extensionContext?.inputItems[0] as! NSExtensionItem
+        let contentTypeText = kUTTypeText as String
+        
+        for attachment in extensionItem.attachments as! [NSItemProvider] {
+            
+            if attachment.hasItemConformingToTypeIdentifier(contentTypeText)
+            {
+                attachment.loadItem(forTypeIdentifier: contentTypeText, options: nil, completionHandler: { (results, error) in
+                    let text = results as! String
+                    if self.validateStringIsNotUrl(urlString: text){
+                        self.shareWord = text
+                        self.navigationItem.title = text
+                        self.performAPICall()
+                    }
+                    else{
+                        self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
+                    }
+                })
+            }
+        }
+    }
+    
+    func validateStringIsNotUrl (urlString: String) -> Bool {
+        if let url:URL = URL(string: urlString){
+            if (url.scheme != nil) && (url.host != nil){
+                return false
+            }
+        }
+        return true
+    }
+    
+    func clearCollectionViewSelection(){
+        for cell in collectionView.visibleCells {
+            let wordCollectionViewCell = cell as! WordCollectionViewCell
+            let isSelectedCell:Bool = (wordCollectionViewCell.index == selectedPageIndex)
+            wordCollectionViewCell.textLabel.textColor = isSelectedCell ? UIColor.white : UIColor.lightGray
+            wordCollectionViewCell.backgroungTabImageView.image = UIImage(named: isSelectedCell ? "SelectedTab" : "UnSelectedTab")
+            wordCollectionViewCell.textLabel.font = UIFont(name: wordCollectionViewCell.textLabel.font.fontName, size:  isSelectedCell ? 16 : 10)
+        }
+    }
+    
+    func getViewControllerAtIndex(index: NSInteger) -> BaseContentViewController{
+        // Create a new view controller and pass suitable data.
+        
+        var pageContentViewController:BaseContentViewController!
+        if index == (arrPageTitle.count-1){
+            pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "TranslatorViewController") as! BaseContentViewController
+        }
+        else{
+            pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "PageContentViewController") as! BaseContentViewController
+        }
+        
+        pageContentViewController.strTitle = "\(arrPageTitle[index])"
+        pageContentViewController.pageIndex = index
+        pageContentViewController.wordInfoType = index == 0 ? .definitions : index == 1 ? .synonyms : index == 2 ? .antonyms : index == 3 ? .examples : .hindiTranslation
+        return pageContentViewController
+    }
+    
+    func selectPageAtIndex(index:NSInteger)
+    {
+        if index < viewControllerList.count{
+            let page = viewControllerList[index]
+            weak var pvcw = self
+            self.setViewControllers([page], direction: (selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
+                if let pvcs = pvcw {
+                    DispatchQueue.main.async{
+                        pvcs.setViewControllers([page], direction: (self.selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: false, completion: nil)
+                    }
+                }
+            }
+        }
+    }
+    
+    func hideExtensionWithCompletionHandler(completion:@escaping (Bool) -> Void) {
+        UIView.animate(withDuration: 0.20, animations: {
+            
+            self.navigationController!.view.transform = CGAffineTransform(translationX: 0, y: self.navigationController!.view.frame.size.height)
+        }, completion: completion)
+    }
+    
+    // MARK: - API Calls Methods
+    
+    func performAPICall(){
+        NotificationCenter.default.post(name: Notification.Name("StartAnimationIdentifier"), object: nil)
+        BaseContentViewController.word.word = shareWord
+        RequestManager().getWordInformation(word: self.shareWord!) { (success, response) in
+            print(response ?? Constants.kErrorMessage)
+            // Notify page content controllers
+            DispatchQueue.main.async {
+                if let word = response as? WordModel{
+                    BaseContentViewController.word = word
+                }
+                
+                self.view.isUserInteractionEnabled = true
+                NotificationCenter.default.post(name: Notification.Name("StopAnimationIdentifier"), object: nil)
+                
+                self.performTranslationAPICall()
+            }
+        }
+    }
+    
+    @objc func performTranslationAPICall(){
+        NotificationCenter.default.post(name: Notification.Name("StartTranslatorAnimationIdentifier"), object: nil)
+        RequestManager().getTranslationInformation(word: self.shareWord!) { (success, response) in
+            print(response ?? Constants.kErrorMessage)
+            // Notify translator controller
+            DispatchQueue.main.async {
+                if let word = response as? WordModel{
+                    BaseContentViewController.word.hindiTranslation = word.hindiTranslation
+                }
+                
+                NotificationCenter.default.post(name: Notification.Name("StopTranslatorAnimationIdentifier"), object: nil)
+            }
+        }
+    }
     
     // MARK: - CollectionView Datasource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -77,167 +239,6 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         return collectionView
     }()
     
-    var arrPageTitle: NSArray = NSArray()
-    
-    // MARK: - View Life Cycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.performTranslationAPICall), name:NSNotification.Name("PerformTranslatorAPICallIdentifier"), object: nil)
-        BaseContentViewController.word = WordModel()
-        arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"];
-        for index in 0..<arrPageTitle.count {
-            viewControllerList.append(getViewControllerAtIndex(index: index))
-        }
-        
-        self.dataSource = self
-        self.delegate = self
-        self.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
-        setupUI()
-        setupShareWord()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    // MARK: - Private Methods
-    
-    private func setupUI() {
-        self.navigationItem.title = "Word Power"
-        navigationController?.navigationBar.backgroundColor = UIColor.white
-        navigationController?.navigationBar.tintColor = UIColor.init(red: 44.0/255.0, green:  193.0/255.0, blue:  133.0/255.0, alpha: 1.0) // Green color Theme
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainPageViewController.saveButtonTapped(sender:)))
-        leftBarButton()
-        view.addSubview(collectionView)
-        self.view.isUserInteractionEnabled = false
-    }
-    
-    private func leftBarButton(){
-        let button = UIButton.init(type: .custom)
-        button.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
-        button.addTarget(self, action:#selector(MainPageViewController.speakerButtonTapped(sender:)), for:.touchUpInside)
-        button.frame = CGRect.init(x: 0, y: 0, width: 32, height: 32)
-        let barButton = UIBarButtonItem.init(customView: button)
-        self.navigationItem.leftBarButtonItem = barButton
-    }
-    
-    private func setupShareWord(){
-        let extensionItem = extensionContext?.inputItems[0] as! NSExtensionItem
-        let contentTypeText = kUTTypeText as String
-        
-        for attachment in extensionItem.attachments as! [NSItemProvider] {
-            
-            if attachment.hasItemConformingToTypeIdentifier(contentTypeText)
-            {
-                attachment.loadItem(forTypeIdentifier: contentTypeText, options: nil, completionHandler: { (results, error) in
-                    let text = results as! String
-                    if self.validateStringNotUrl(urlString: text){
-                        self.shareWord = text
-                        self.navigationItem.title = text
-                        self.performAPICall()
-                    }
-                    else{
-                        self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
-                    }
-                })
-            }
-        }
-    }
-    
-    func validateStringNotUrl (urlString: String) -> Bool {
-        if let url:URL = URL(string: urlString){
-            if (url.scheme != nil) && (url.host != nil){
-                return false
-            }
-        }
-        return true
-    }
-    
-    func clearCollectionViewSelection(){
-        for cell in collectionView.visibleCells {
-            let wordCollectionViewCell = cell as! WordCollectionViewCell
-            let isSelectedCell:Bool = (wordCollectionViewCell.index == selectedPageIndex)
-            wordCollectionViewCell.textLabel.textColor = isSelectedCell ? UIColor.white : UIColor.lightGray
-            wordCollectionViewCell.backgroungTabImageView.image = UIImage(named: isSelectedCell ? "SelectedTab" : "UnSelectedTab")
-            wordCollectionViewCell.textLabel.font = UIFont(name: wordCollectionViewCell.textLabel.font.fontName, size:  isSelectedCell ? 16 : 10)
-        }
-    }
-    
-    func performAPICall(){
-        NotificationCenter.default.post(name: Notification.Name("StartAnimationIdentifier"), object: nil)
-        BaseContentViewController.word.word = shareWord
-        RequestManager().getWordInformation(word: self.shareWord!) { (success, response) in
-            print(response ?? Constants.kErrorMessage)
-            // Notify page content controllers
-            DispatchQueue.main.async {
-                if let word = response as? WordModel{
-                    BaseContentViewController.word = word
-                }
-                
-                self.view.isUserInteractionEnabled = true
-                NotificationCenter.default.post(name: Notification.Name("StopAnimationIdentifier"), object: nil)
-                
-                self.performTranslationAPICall()
-            }
-        }
-    }
-    
-    @objc func performTranslationAPICall(){
-        NotificationCenter.default.post(name: Notification.Name("StartTranslatorAnimationIdentifier"), object: nil)
-        RequestManager().getTranslationInformation(word: self.shareWord!) { (success, response) in
-            print(response ?? Constants.kErrorMessage)
-            // Notify translator controller
-            DispatchQueue.main.async {
-                if let word = response as? WordModel{
-                    BaseContentViewController.word.hindiTranslation = word.hindiTranslation
-                }
-                
-                NotificationCenter.default.post(name: Notification.Name("StopTranslatorAnimationIdentifier"), object: nil)
-            }
-        }
-    }
-    
-    func getViewControllerAtIndex(index: NSInteger) -> BaseContentViewController{
-        // Create a new view controller and pass suitable data.
-        
-        var pageContentViewController:BaseContentViewController!
-        if index == (arrPageTitle.count-1){
-            pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "TranslatorViewController") as! BaseContentViewController
-        }
-        else{
-            pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "PageContentViewController") as! BaseContentViewController
-        }
-        
-        pageContentViewController.strTitle = "\(arrPageTitle[index])"
-        pageContentViewController.pageIndex = index
-        pageContentViewController.wordInfoType = index == 0 ? .definitions : index == 1 ? .synonyms : index == 2 ? .antonyms : index == 3 ? .examples : .hindiTranslation
-        return pageContentViewController
-    }
-    
-    func selectPageAtIndex(index:NSInteger)
-    {
-        if index < viewControllerList.count{
-            let page = viewControllerList[index]
-            weak var pvcw = self
-            self.setViewControllers([page], direction: (selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
-                if let pvcs = pvcw {
-                    DispatchQueue.main.async{
-                        pvcs.setViewControllers([page], direction: (self.selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: false, completion: nil)
-                    }
-                }
-            }
-        }
-    }
-    
-    func hideExtensionWithCompletionHandler(completion:@escaping (Bool) -> Void) {
-        UIView.animate(withDuration: 0.20, animations: {
-            
-            self.navigationController!.view.transform = CGAffineTransform(translationX: 0, y: self.navigationController!.view.frame.size.height)
-        }, completion: completion)
-    }
-    
     // MARK: - IBActions Methods
     
     @objc func saveButtonTapped(sender: UIBarButtonItem) {
@@ -292,11 +293,5 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         return viewControllerList[index]
     }
     
-}
-
-private extension MainPageViewController {
-    struct Identifiers {
-        static let DeckCell = "deckCell"
-    }
 }
 

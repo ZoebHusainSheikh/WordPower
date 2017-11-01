@@ -34,7 +34,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        performGetLangsAPICall()
+        langsInfo = Constants.getLanguagesInfo()
+        if langsInfo.keys.count == 0 {
+            self.tableView.isHidden = true
+            performGetLangsAPICall()
+        }
         self.requestSpeechAuthorization()
     }
 
@@ -243,6 +247,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             DispatchQueue.main.async {
                 if let langsInfo = response as? Dictionary<String, String>{
                     self.langsInfo = langsInfo
+                    Constants.setLanguagesInfo(languagesInfo: langsInfo)
                     self.tableView.isHidden = false
                     self.tableView.reloadData()
                 }

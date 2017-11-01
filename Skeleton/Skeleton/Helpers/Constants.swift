@@ -66,6 +66,24 @@ struct Constants {
             userDefaults.synchronize()
         }
     }
+    
+    static func getLanguagesInfo() -> Dictionary<String, String> {
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers1.WordPower.Word-Share") {
+            
+            if let defaultLanguage = userDefaults.dictionary(forKey: "languagesInfo"){
+                return defaultLanguage as! Dictionary<String, String>
+            }
+        }
+        
+        return [:]
+    }
+    
+    static func setLanguagesInfo(languagesInfo:Dictionary<String, String>){
+        if let userDefaults = UserDefaults(suiteName: "com.BestPeers1.WordPower.Word-Share") {
+            userDefaults.set(languagesInfo, forKey: "languagesInfo")
+            userDefaults.synchronize()
+        }
+    }
 }
 
 

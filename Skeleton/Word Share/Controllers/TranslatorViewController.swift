@@ -30,7 +30,10 @@ class TranslatorViewController: BaseContentViewController, UITableViewDataSource
             showNoContentView()
         }
         
-        performGetLangsAPICall()
+        langsInfo = Constants.getLanguagesInfo()
+        if langsInfo.keys.count == 0 {
+            performGetLangsAPICall()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -115,6 +118,7 @@ class TranslatorViewController: BaseContentViewController, UITableViewDataSource
             DispatchQueue.main.async {
                 if let langsInfo = response as? Dictionary<String, String>{
                     self.langsInfo = langsInfo
+                    Constants.setLanguagesInfo(languagesInfo: langsInfo)
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
                 }
