@@ -32,10 +32,12 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         if (indexPath.row == selectedPageIndex){
             cell.textLabel.textColor = UIColor.white
             cell.backgroungTabImageView.image = UIImage(named: "SelectedTab")
+            cell.textLabel.font = UIFont(name: cell.textLabel.font.fontName, size: 16)
         }
         else{
             cell.textLabel.textColor = UIColor.lightGray
             cell.backgroungTabImageView.image = UIImage(named: "UnSelectedTab")
+            cell.textLabel.font = UIFont(name: cell.textLabel.font.fontName, size: 10)
         }
         return cell
     }
@@ -61,7 +63,7 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         layout.minimumLineSpacing = 0;
         let navigationBarHeight: CGFloat = 20 + self.navigationController!.navigationBar.frame.height
         let rect = CGRect(
-            origin: CGPoint(x: 0, y: navigationBarHeight),
+            origin: CGPoint(x: 0, y: UIScreen.main.bounds.size.height - 40),
             size: CGSize(width: UIScreen.main.bounds.size.width, height: 40)
         )
         let collectionView = UICollectionView(frame: rect, collectionViewLayout: layout)
@@ -155,9 +157,11 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func clearCollectionViewSelection(){
         for cell in collectionView.visibleCells {
-            let isSelectedCell:Bool = ((cell as! WordCollectionViewCell).index == selectedPageIndex)
-            (cell as! WordCollectionViewCell).textLabel.textColor = isSelectedCell ? UIColor.white : UIColor.lightGray
-            (cell as! WordCollectionViewCell).backgroungTabImageView.image = UIImage(named: isSelectedCell ? "SelectedTab" : "UnSelectedTab")
+            let wordCollectionViewCell = cell as! WordCollectionViewCell
+            let isSelectedCell:Bool = (wordCollectionViewCell.index == selectedPageIndex)
+            wordCollectionViewCell.textLabel.textColor = isSelectedCell ? UIColor.white : UIColor.lightGray
+            wordCollectionViewCell.backgroungTabImageView.image = UIImage(named: isSelectedCell ? "SelectedTab" : "UnSelectedTab")
+            wordCollectionViewCell.textLabel.font = UIFont(name: wordCollectionViewCell.textLabel.font.fontName, size:  isSelectedCell ? 16 : 10)
         }
     }
     
