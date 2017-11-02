@@ -11,7 +11,8 @@ import Social
 import MobileCoreServices
 import AVFoundation
 
-class MainPageViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
+class MainPageViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    @IBOutlet weak var collectionView: UICollectionView!
     var pageControlViewController:UIPageViewController = UIPageViewController.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     var viewControllerList:[UIViewController] = []
     var selectedPageIndex:Int = 0
@@ -48,7 +49,6 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         navigationController?.navigationBar.tintColor = UIColor.init(red: 44.0/255.0, green:  193.0/255.0, blue:  133.0/255.0, alpha: 1.0) // Green color Theme
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainPageViewController.saveButtonTapped(sender:)))
         leftBarButton()
-        view.addSubview(collectionView)
         self.view.isUserInteractionEnabled = false
     }
     
@@ -243,28 +243,9 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         }
     }
     
-    private lazy var collectionView: UICollectionView = {
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.size.width/4, height: 40)
-        layout.minimumInteritemSpacing = 0;
-        layout.minimumLineSpacing = 0;
-        let navigationBarHeight: CGFloat = 20 + self.navigationController!.navigationBar.frame.height
-        let rect = CGRect(
-            origin: CGPoint(x: 0, y: UIScreen.main.bounds.size.height - 40),
-            size: CGSize(width: UIScreen.main.bounds.size.width, height: 40)
-        )
-        let collectionView = UICollectionView(frame: rect, collectionViewLayout: layout)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(UINib(nibName: "WordCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "Cell")
-        collectionView.backgroundColor = UIColor.init(red: 228.0/255.0, green:  233.0/255.0, blue:  231.0/255.0, alpha: 1.0)
-        
-        collectionView.allowsMultipleSelection = false
-        print("Collection view initialised")
-        return collectionView
-    }()
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: UIScreen.main.bounds.size.width/4, height: 40)
+    }
     
     // MARK: - IBActions Methods
     
