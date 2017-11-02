@@ -11,31 +11,20 @@ import Social
 import MobileCoreServices
 import AVFoundation
 
-class MainPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
-    
+class MainPageViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
+    var pageControlViewController:UIPageViewController = UIPageViewController.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     var viewControllerList:[UIViewController] = []
     var selectedPageIndex:Int = 0
     var shareWord:String? = nil
     let synth = AVSpeechSynthesizer()
     var myUtterance = AVSpeechUtterance(string: "")
-    var arrPageTitle: NSArray = NSArray()
+    var arrPageTitle: NSArray = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"]
     
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.performTranslationAPICall), name:NSNotification.Name("PerformTranslatorAPICallIdentifier"), object: nil)
-        BaseContentViewController.word = WordModel()
-        arrPageTitle = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"];
-        for index in 0..<arrPageTitle.count {
-            viewControllerList.append(getViewControllerAtIndex(index: index))
-        }
-        
-        self.dataSource = self
-        self.delegate = self
-        self.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
-        setupUI()
-        setupShareWord()
+        initialSetup()
     }
     
     override func didReceiveMemoryWarning() {
@@ -45,7 +34,15 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     // MARK: - Private Methods
     
+    private func initialSetup() {
+        NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.performTranslationAPICall), name:NSNotification.Name("PerformTranslatorAPICallIdentifier"), object: nil)
+        BaseContentViewController.word = WordModel()
+        setupUI()
+        setupShareWord()
+    }
+    
     private func setupUI() {
+        setupPageVC()
         self.navigationItem.title = "Word Power"
         navigationController?.navigationBar.backgroundColor = UIColor.white
         navigationController?.navigationBar.tintColor = UIColor.init(red: 44.0/255.0, green:  193.0/255.0, blue:  133.0/255.0, alpha: 1.0) // Green color Theme
@@ -53,6 +50,36 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
         leftBarButton()
         view.addSubview(collectionView)
         self.view.isUserInteractionEnabled = false
+    }
+    
+    private func setupPageVC(){
+        for index in 0..<arrPageTitle.count {
+            viewControllerList.append(getViewControllerAtIndex(index: index))
+        }
+        
+        pageControlViewController.dataSource = self
+        pageControlViewController.delegate = self
+        pageControlViewController.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+        
+        let pageControllerView = pageControlViewController.view!
+        pageControllerView.backgroundColor = UIColor.clear
+        view.addSubview(pageControllerView)
+        
+        pageControllerView.translatesAutoresizingMaskIntoConstraints = false
+        let guide = view.safeAreaLayoutGuide
+        let leadingContraints = NSLayoutConstraint(item: pageControllerView, attribute:
+            .leadingMargin, relatedBy: .equal, toItem: guide,
+                            attribute: .leadingMargin, multiplier: 1.0,
+                            constant: 20)
+        let trailingContraints = NSLayoutConstraint(item: pageControllerView, attribute:
+            .trailingMargin, relatedBy: .equal, toItem: guide,
+                             attribute: .trailingMargin, multiplier: 1.0, constant: -20)
+        let topConstraints = NSLayoutConstraint(item: pageControllerView, attribute: .top, relatedBy: .equal,
+                                                toItem: guide, attribute: .top, multiplier: 1.0, constant: 0)
+        let bottomConstraints = NSLayoutConstraint(item: pageControllerView, attribute: .bottom, relatedBy: .equal,
+                                                   toItem: guide, attribute: .bottom, multiplier: 1.0, constant: -40)
+        
+        NSLayoutConstraint.activate([leadingContraints, trailingContraints,topConstraints, bottomConstraints])
     }
     
     private func leftBarButton(){
@@ -127,8 +154,8 @@ class MainPageViewController: UIPageViewController, UIPageViewControllerDataSour
     {
         if index < viewControllerList.count{
             let page = viewControllerList[index]
-            weak var pvcw = self
-            self.setViewControllers([page], direction: (selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
+            weak var pvcw = pageControlViewController
+            pageControlViewController.setViewControllers([page], direction: (selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
                 if let pvcs = pvcw {
                     DispatchQueue.main.async{
                         pvcs.setViewControllers([page], direction: (self.selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: false, completion: nil)

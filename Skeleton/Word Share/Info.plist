@@ -20,20 +20,20 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>NSExtension</key>
-	<dict>
-		<key>NSExtensionAttributes</key>
-		<dict>
-			<key>NSExtensionActivationRule</key>
-			<dict>
-				<key>NSExtensionActivationSupportsText</key>
-				<true/>
-			</dict>
-		</dict>
-		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.share-services</string>
-		<key>NSExtensionPrincipalClass</key>
-		<string>EntryViewController</string>
-	</dict>
+        <key>NSExtension</key>
+        <dict>
+            <key>NSExtensionAttributes</key>
+            <dict>
+                <key>NSExtensionActivationRule</key>
+                <dict>
+                    <key>NSExtensionActivationSupportsText</key>
+                    <true/>
+                </dict>
+            </dict>
+            <key>NSExtensionPointIdentifier</key>
+            <string>com.apple.share-services</string>
+            <key>NSExtensionPrincipalClass</key>
+            <string>EntryViewController</string>
+        </dict>
 </dict>
 </plist>
