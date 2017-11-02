@@ -243,21 +243,9 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         }
     }
     
+    // MARK: - UICollectionViewDelegateFlowLayout Methods
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: UIScreen.main.bounds.size.width/4, height: 40)
-    }
-    
-    // MARK: - IBActions Methods
-    
-    @objc func saveButtonTapped(sender: UIBarButtonItem) {
-        self.hideExtensionWithCompletionHandler(completion: { (Bool) -> Void in
-            self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
-        })
-    }
-    
-    @objc func speakerButtonTapped(sender: UIBarButtonItem) {
-        myUtterance = AVSpeechUtterance(string: shareWord ?? "")
-        synth.speak(myUtterance)
     }
     
     // MARK: - UIPageVieControllerDelegate Methods
@@ -299,6 +287,19 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
             return nil;
         }
         return viewControllerList[index]
+    }
+    
+    // MARK: - IBActions Methods
+    
+    @objc func saveButtonTapped(sender: UIBarButtonItem) {
+        self.hideExtensionWithCompletionHandler(completion: { (Bool) -> Void in
+            self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
+        })
+    }
+    
+    @objc func speakerButtonTapped(sender: UIBarButtonItem) {
+        myUtterance = AVSpeechUtterance(string: shareWord ?? "")
+        synth.speak(myUtterance)
     }
     
 }
