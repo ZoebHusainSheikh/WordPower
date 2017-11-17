@@ -26,6 +26,9 @@ class PageContentViewController: BaseContentViewController, UITableViewDataSourc
             tableView.reloadData()
             showNoContentView()
         }
+        
+        self.tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
+
     }
 
     override func didReceiveMemoryWarning() {

@@ -10,9 +10,18 @@ import UIKit
 import Social
 import MobileCoreServices
 import AVFoundation
+import MapKit
 
 class MainPageViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var waterImageView: UIImageView!
+    @IBOutlet weak var translationContainerView: UIView!
+    @IBOutlet weak var wordContainerView: UIView!
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var translationButton: UIButton!
+    
     var pageControlViewController:UIPageViewController = UIPageViewController.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     var viewControllerList:[UIViewController] = []
     var selectedPageIndex:Int = 0
@@ -20,6 +29,24 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     let synth = AVSpeechSynthesizer()
     var myUtterance = AVSpeechUtterance(string: "")
     var arrPageTitle: NSArray = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"]
+    var tempLongitude: Double = -122.02962
+    var tempLatitude: Double = 37.332077
+    
+    private lazy var pageControllerView: UIView = {
+        for index in 0..<arrPageTitle.count {
+            viewControllerList.append(getViewControllerAtIndex(index: index))
+        }
+        
+        pageControlViewController.dataSource = self
+        pageControlViewController.delegate = self
+        pageControlViewController.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+        
+        let pageControllerView = pageControlViewController.view!
+        pageControllerView.backgroundColor = UIColor.clear
+        
+        return pageControllerView
+    }()
+    
     
     // MARK: - View Life Cycle
     
@@ -36,6 +63,7 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     // MARK: - Private Methods
     
     private func initialSetup() {
+        textView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.new, context: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.performTranslationAPICall), name:NSNotification.Name("PerformTranslatorAPICallIdentifier"), object: nil)
         BaseContentViewController.word = WordModel()
         setupUI()
@@ -44,27 +72,17 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     
     private func setupUI() {
         setupPageVC()
+//        getMapImage(increment: 0.0)
         self.navigationItem.title = "Word Power"
-        navigationController?.navigationBar.backgroundColor = UIColor.white
-        navigationController?.navigationBar.tintColor = UIColor.init(red: 44.0/255.0, green:  193.0/255.0, blue:  133.0/255.0, alpha: 1.0) // Green color Theme
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MainPageViewController.saveButtonTapped(sender:)))
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.barTintColor = UIColor.black
+        
         leftBarButton()
+        rightBarButton()
         self.view.isUserInteractionEnabled = false
     }
     
-    private func setupPageVC(){
-        for index in 0..<arrPageTitle.count {
-            viewControllerList.append(getViewControllerAtIndex(index: index))
-        }
-        
-        pageControlViewController.dataSource = self
-        pageControlViewController.delegate = self
-        pageControlViewController.setViewControllers([viewControllerList[0]] as [UIViewController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
-        
-        let pageControllerView = pageControlViewController.view!
-        pageControllerView.backgroundColor = UIColor.clear
-        view.addSubview(pageControllerView)
-        
+    private func applyPageConstraints() {
         pageControllerView.translatesAutoresizingMaskIntoConstraints = false
         let guide = view.safeAreaLayoutGuide
         let leadingContraints = NSLayoutConstraint(item: pageControllerView, attribute:
@@ -82,6 +100,14 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         NSLayoutConstraint.activate([leadingContraints, trailingContraints,topConstraints, bottomConstraints])
     }
     
+    private func setupPageVC(){
+        view.addSubview(pageControllerView)
+        applyPageConstraints()
+        pageControllerView.isHidden = true
+        view.bringSubview(toFront: closeButton)
+        view.bringSubview(toFront: translationButton)
+    }
+    
     private func leftBarButton(){
         let button = UIButton.init(type: .custom)
         button.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
@@ -89,6 +115,15 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         button.frame = CGRect.init(x: 0, y: 0, width: 32, height: 32)
         let barButton = UIBarButtonItem.init(customView: button)
         self.navigationItem.leftBarButtonItem = barButton
+    }
+    
+    private func rightBarButton(){
+        let button = UIButton.init(type: .custom)
+        button.setImage(UIImage.init(named: "done"), for: UIControlState.normal)
+        button.addTarget(self, action:#selector(MainPageViewController.saveButtonTapped(sender:)), for:.touchUpInside)
+        button.frame = CGRect.init(x: 0, y: 0, width: 40, height: 36)
+        let barButton = UIBarButtonItem.init(customView: button)
+        self.navigationItem.rightBarButtonItem = barButton
     }
     
     private func setupShareWord(){
@@ -104,7 +139,7 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                     if self.validateStringIsNotUrl(urlString: text){
                         self.shareWord = text
                         self.navigationItem.title = text
-                        self.performAPICall()
+                        self.performTranslationAPICall()
                     }
                     else{
                         self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
@@ -165,6 +200,44 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         }
     }
     
+    func getMapImage(increment: Double){
+        tempLongitude += increment
+        tempLatitude += increment/2
+        let mapSnapshotOptions = MKMapSnapshotOptions()
+        
+        // Set the region of the map that is rendered.
+        let location = CLLocationCoordinate2DMake(tempLatitude, tempLongitude) // Apple HQ
+        let region = MKCoordinateRegionMakeWithDistance(location, 1500000, 1500000)
+        mapSnapshotOptions.region = region
+        
+        // Set the scale of the image. We'll just use the scale of the current device, which is 2x scale on Retina screens.
+        mapSnapshotOptions.scale = UIScreen.main.scale
+        
+        // Set the size of the image output.
+        mapSnapshotOptions.size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        
+        // Show buildings and Points of Interest on the snapshot
+        mapSnapshotOptions.showsBuildings = true
+        mapSnapshotOptions.showsPointsOfInterest = true
+        
+        let snapShotter = MKMapSnapshotter(options: mapSnapshotOptions)
+        
+        snapShotter.start { (snapshot:MKMapSnapshot?, error:Error?) in
+            
+            let image = snapshot?.image
+            DispatchQueue.main.async {
+                
+                UIView.transition(with: self.backgroundImageView,
+                                  duration:0.5,
+                                  options: .curveLinear,
+                                  animations: { self.backgroundImageView.image = image },
+                                  completion: nil)
+                
+                self.getMapImage(increment: 0.100000)
+            }
+        }
+    }
+    
     func hideExtensionWithCompletionHandler(completion:@escaping (Bool) -> Void) {
         UIView.animate(withDuration: 0.20, animations: {
             
@@ -187,8 +260,6 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                 
                 self.view.isUserInteractionEnabled = true
                 NotificationCenter.default.post(name: Notification.Name("StopAnimationIdentifier"), object: nil)
-                
-                self.performTranslationAPICall()
             }
         }
     }
@@ -201,8 +272,10 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
             DispatchQueue.main.async {
                 if let word = response as? WordModel{
                     BaseContentViewController.word.hindiTranslation = word.hindiTranslation
+                    self.textView.text = word.hindiTranslation
                 }
                 
+                self.performAPICall()
                 NotificationCenter.default.post(name: Notification.Name("StopTranslatorAnimationIdentifier"), object: nil)
             }
         }
@@ -240,7 +313,16 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
             
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             collectionView.reloadData()
+            showPageView()
         }
+    }
+    
+    func showPageView(state:Bool = true) {
+        wordContainerView.isHidden = !state
+        pageControllerView.isHidden = !state
+        closeButton.isHidden = !state
+        translationButton.isHidden = !state
+        translationContainerView.isHidden = state
     }
     
     // MARK: - UICollectionViewDelegateFlowLayout Methods
@@ -290,6 +372,12 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     }
     
     // MARK: - IBActions Methods
+    @IBAction func closePagesButtonTapped(_ sender: Any) {
+        showPageView(state: false)
+    }
+    
+    @IBAction func languageButtonTapped(_ sender: Any) {
+    }
     
     @objc func saveButtonTapped(sender: UIBarButtonItem) {
         self.hideExtensionWithCompletionHandler(completion: { (Bool) -> Void in
@@ -302,5 +390,14 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         synth.speak(myUtterance)
     }
     
+    // MARK: - Observer Methods
+    
+    // Force the text in a UITextView to always center itself.
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        let textView = object as! UITextView
+        var topCorrect = (textView.bounds.size.height - textView.contentSize.height * textView.zoomScale) / 2
+        topCorrect = topCorrect < 0.0 ? 0.0 : topCorrect;
+        textView.contentInset.top = topCorrect
+    }
 }
 

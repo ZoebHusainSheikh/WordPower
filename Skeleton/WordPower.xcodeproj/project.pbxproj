@@ -31,6 +31,8 @@
 		4888A1501F9DCF0600DCA31C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A1D53AE1EDEB2A800CCCBE7 /* Assets.xcassets */; };
 		48D418471FA07935009873CC /* TranslatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D418461FA07935009873CC /* TranslatorViewController.swift */; };
 		48D418491FA085C0009873CC /* BaseContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D418481FA085C0009873CC /* BaseContentViewController.swift */; };
+		48F248A31FBD7C3B0044593B /* Abel-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48F248A21FBD7C2A0044593B /* Abel-Regular.ttf */; };
+		48F248A41FBD7C3C0044593B /* Abel-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48F248A21FBD7C2A0044593B /* Abel-Regular.ttf */; };
 		9A1D53A51EDEB2A800CCCBE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D53A41EDEB2A800CCCBE7 /* AppDelegate.swift */; };
 		9A1D53AA1EDEB2A800CCCBE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A1D53A81EDEB2A800CCCBE7 /* Main.storyboard */; };
 		9A1D53AD1EDEB2A800CCCBE7 /* Skeleton.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9A1D53AB1EDEB2A800CCCBE7 /* Skeleton.xcdatamodeld */; };
@@ -107,6 +109,7 @@
 		4878156E1F948C2600873D9F /* WordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordModel.swift; sourceTree = "<group>"; };
 		48D418461FA07935009873CC /* TranslatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorViewController.swift; sourceTree = "<group>"; };
 		48D418481FA085C0009873CC /* BaseContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseContentViewController.swift; sourceTree = "<group>"; };
+		48F248A21FBD7C2A0044593B /* Abel-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Abel-Regular.ttf"; sourceTree = "<group>"; };
 		501B046B048B799AA68DA297 /* Pods-WordPower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WordPower.release.xcconfig"; path = "Pods/Target Support Files/Pods-WordPower/Pods-WordPower.release.xcconfig"; sourceTree = "<group>"; };
 		8C6BE896D9EEF665619F0325 /* Pods_WordPower.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WordPower.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A1D53A11EDEB2A800CCCBE7 /* WordPower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordPower.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -421,6 +424,7 @@
 			isa = PBXGroup;
 			children = (
 				9A1D551B1EDFF6C700CCCBE7 /* AppSettings.plist */,
+				48F248A21FBD7C2A0044593B /* Abel-Regular.ttf */,
 				9A1D551C1EDFF6C700CCCBE7 /* Localizable.strings */,
 			);
 			path = Resources;
@@ -564,6 +568,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48F248A41FBD7C3C0044593B /* Abel-Regular.ttf in Resources */,
 				4888A1501F9DCF0600DCA31C /* Assets.xcassets in Resources */,
 				481E62CE1F95FFE200D74899 /* MainInterface.storyboard in Resources */,
 			);
@@ -576,6 +581,7 @@
 				9A1D551E1EDFF6C700CCCBE7 /* Localizable.strings in Resources */,
 				9A1D53B21EDEB2A800CCCBE7 /* LaunchScreen.storyboard in Resources */,
 				9A1D551D1EDFF6C700CCCBE7 /* AppSettings.plist in Resources */,
+				48F248A31FBD7C3B0044593B /* Abel-Regular.ttf in Resources */,
 				9A1D53AF1EDEB2A800CCCBE7 /* Assets.xcassets in Resources */,
 				9A1D53AA1EDEB2A800CCCBE7 /* Main.storyboard in Resources */,
 			);

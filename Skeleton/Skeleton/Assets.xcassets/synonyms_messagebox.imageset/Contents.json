@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "speaker.png",
+      "filename" : "synonyms_messagebox.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "speaker@2x.png",
+      "filename" : "synonyms_messagebox@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "speaker@3x.png",
+      "filename" : "synonyms_messagebox@3x.png",
       "scale" : "3x"
     }
   ],
