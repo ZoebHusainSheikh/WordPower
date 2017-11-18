@@ -11,7 +11,6 @@ import UIKit
 class PageContentViewController: BaseContentViewController, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var noContentLabel: UILabel!
     
     // MARK: - View Life Cycle
@@ -19,16 +18,15 @@ class PageContentViewController: BaseContentViewController, UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.stopAnimation), name:NSNotification.Name("StopAnimationIdentifier"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.startAnimation), name:NSNotification.Name("StartAnimationIdentifier"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.stopAnimation), name:NSNotification.Name("DidFetchWordAPIIdentifier"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PageContentViewController.startAnimation), name:NSNotification.Name("WillFetchWordAPIIdentifier"), object: nil)
         
         if BaseContentViewController.word.word != nil{
             tableView.reloadData()
-            showNoContentView()
+            showNoContentView(isLoading: false)
         }
         
         self.tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -92,14 +90,13 @@ class PageContentViewController: BaseContentViewController, UITableViewDataSourc
     
     func loadAnimation(isLoading:Bool = true){
         DispatchQueue.main.async {
-            isLoading ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
             self.tableView.reloadData()
-            self.showNoContentView()
+            self.showNoContentView(isLoading:isLoading)
         }
     }
     
-    private func showNoContentView(){
-        if activityIndicator.isAnimating{
+    private func showNoContentView(isLoading:Bool){
+        if isLoading {
             noContentLabel.isHidden = true
         }
         else{
@@ -118,9 +115,9 @@ class PageContentViewController: BaseContentViewController, UITableViewDataSourc
         }
         
         if !noContentLabel.isHidden{
-            noContentLabel.text = "No \(wordInfoType.getString()) found for \(BaseContentViewController.word.word!)"
+            noContentLabel.text = "No \(wordInfoType.getString()) found for \"\(BaseContentViewController.word.word!)\""
         }
         
-        tableView.isHidden = !noContentLabel.isHidden || activityIndicator.isAnimating
+        tableView.isHidden = !noContentLabel.isHidden || isLoading
     }
 }

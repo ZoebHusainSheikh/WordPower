@@ -67,6 +67,8 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     
     private func initialSetup() {
         textView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.new, context: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.showAnimation), name:NSNotification.Name("WillFetchLanguagesAPICallIdentifier"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.hideAnimation), name:NSNotification.Name("DidFetchLanguagesAPICallIdentifier"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(MainPageViewController.performTranslationAPICall), name:NSNotification.Name("PerformTranslatorAPICallIdentifier"), object: nil)
         BaseContentViewController.word = WordModel()
         setupUI()
@@ -141,7 +143,6 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                     if self.validateStringIsNotUrl(urlString: text){
                         self.shareWord = text
                         self.navigationItem.title = text
-                        self.loadAnimation()
                         self.performTranslationAPICall()
                     }
                     else{
@@ -174,11 +175,23 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         }
     }
     
+    @objc func showAnimation(){
+        DispatchQueue.main.async {
+            self.activityIndicator.startAnimating()
+        }
+    }
+    
+    @objc func hideAnimation(){
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+        }
+    }
+    
     private func showNoContentView(){
         noContentLabel.isHidden = activityIndicator.isAnimating ? true : (BaseContentViewController.word.hindiTranslation != nil)
         
         if !noContentLabel.isHidden{
-            noContentLabel.text = "No translation found for \(shareWord!)"
+            noContentLabel.text = "No translation found for \"\(shareWord!)\""
         }
     }
     
@@ -214,7 +227,7 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         return pageContentViewController
     }
     
-    func selectPageAtIndex(index:Int)
+    func selectPageAtIndex(index:Int, isAnimated:Bool = false)
     {
         if index < viewControllerList.count{
             if selectedPageIndex == nil {
@@ -222,34 +235,37 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
             }
             let page = viewControllerList[index]
             weak var pvcw = pageControlViewController
-            pageControlViewController.setViewControllers([page], direction: (selectedPageIndex! < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
+            pageControlViewController.setViewControllers([page], direction: (selectedPageIndex! < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: isAnimated) { _ in
                 if let pvcs = pvcw {
                     DispatchQueue.main.async{
                         pvcs.setViewControllers([page], direction: (self.selectedPageIndex! < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: false, completion: nil)
                     }
                 }
             }
-            
-            var image: UIImage?
-            switch index {
-            case 0:
-                image = UIImage(named: "definitions_messagebox")
-            case 1:
-                image = UIImage(named: "synonyms_messagebox")
-            case 2:
-                image = UIImage(named: "antonyms_messagebox")
-            case 3:
-                image = UIImage(named: "examples_messagebox")
-            default:
-                image = UIImage(named: "change_language_messagebox")
-            }
-            
-            UIView.transition(with: waterImageView,
-                              duration:0.5,
-                              options: .curveLinear,
-                              animations: { self.waterImageView.image = image },
-                              completion: nil)
+            changeWaterImage(index: index)
         }
+    }
+    
+    func changeWaterImage(index:Int) {
+        var image: UIImage?
+        switch index {
+        case 0:
+            image = UIImage(named: "definitions_messagebox")
+        case 1:
+            image = UIImage(named: "synonyms_messagebox")
+        case 2:
+            image = UIImage(named: "antonyms_messagebox")
+        case 3:
+            image = UIImage(named: "examples_messagebox")
+        default:
+            image = UIImage(named: "change_language_messagebox")
+        }
+        
+        UIView.transition(with: waterImageView,
+                          duration:0.5,
+                          options: .curveLinear,
+                          animations: { self.waterImageView.image = image },
+                          completion: nil)
     }
     
     func getMapImage(increment: Double){
@@ -300,7 +316,7 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     // MARK: - API Calls Methods
     
     func performAPICall(){
-        NotificationCenter.default.post(name: Notification.Name("StartAnimationIdentifier"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("WillFetchWordAPIIdentifier"), object: nil)
         BaseContentViewController.word.word = shareWord
         RequestManager().getWordInformation(word: self.shareWord!) { (success, response) in
             print(response ?? Constants.kErrorMessage)
@@ -313,17 +329,26 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                 UIView.transition(with: self.collectionView,
                                   duration:0.5,
                                   options: .curveLinear,
-                                  animations: { self.collectionView.isHidden = false },
+                                  animations: { self.collectionView.isHidden = false
+                                    self.translationButton.isHidden = false
+                },
                                   completion: nil)
                 
                 
-                NotificationCenter.default.post(name: Notification.Name("StopAnimationIdentifier"), object: nil)
+                NotificationCenter.default.post(name: Notification.Name("DidFetchWordAPIIdentifier"), object: nil)
             }
         }
     }
     
     @objc func performTranslationAPICall(){
-        NotificationCenter.default.post(name: Notification.Name("StartTranslatorAnimationIdentifier"), object: nil)
+        selectedPageIndex = nil
+        DispatchQueue.main.async {
+            self.loadAnimation()
+            if !self.pageControllerView.isHidden {
+                self.showPageView(state: false)
+                self.textView.isHidden = true
+            }
+        }
         RequestManager().getTranslationInformation(word: self.shareWord!) { (success, response) in
             print(response ?? Constants.kErrorMessage)
             // Notify translator controller
@@ -331,11 +356,11 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                 if let word = response as? WordModel{
                     BaseContentViewController.word.hindiTranslation = word.hindiTranslation
                     self.textView.text = word.hindiTranslation
+                    self.textView.isHidden = false
                 }
                 
                 self.loadAnimation(isLoading: false)
                 self.performAPICall()
-                NotificationCenter.default.post(name: Notification.Name("StopTranslatorAnimationIdentifier"), object: nil)
             }
         }
     }
@@ -398,9 +423,9 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         if (completed && finished) {
             if let currentVC:BaseContentViewController = pageViewController.viewControllers?.last as? BaseContentViewController {
                 if(selectedPageIndex != currentVC.pageIndex){
-                    let indexPath = IndexPath(item: currentVC.pageIndex, section: 0)
-                    collectionView.delegate?.collectionView!(collectionView, didSelectItemAt: indexPath)
                     selectedPageIndex = currentVC.pageIndex
+                    collectionView.reloadData()
+                    changeWaterImage(index: selectedPageIndex!)
                 }
             }
         }
@@ -442,9 +467,16 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     
     @IBAction func languageButtonTapped(_ sender: Any) {
         let index:Int = arrPageTitle.count
-        selectPageAtIndex(index: index)
-        selectedPageIndex = index
-        collectionView.reloadData()
+        if(selectedPageIndex != index) {
+            selectedPageIndex = index
+            selectPageAtIndex(index: index)
+            collectionView.reloadData()
+            
+            if self.pageControllerView.isHidden {
+                showPageView()
+            }
+            
+        }
     }
     
     @objc func saveButtonTapped(sender: UIBarButtonItem) {

@@ -10,11 +10,7 @@ import UIKit
 
 class TranslatorViewController: BaseContentViewController, UITableViewDataSource, UITableViewDelegate {
 
-    @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var noContentLabel: UILabel!
-    @IBOutlet weak var yandrexButton: UIButton!
     
     var langsInfo:Dictionary<String, String> = [:]
     
@@ -23,16 +19,23 @@ class TranslatorViewController: BaseContentViewController, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         wordInfoType = .hindiTranslation
-        NotificationCenter.default.addObserver(self, selector: #selector(TranslatorViewController.stopAnimation), name:NSNotification.Name("StopTranslatorAnimationIdentifier"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(TranslatorViewController.startAnimation), name:NSNotification.Name("StartTranslatorAnimationIdentifier"), object: nil)
-        
-        if BaseContentViewController.word.word != nil{
-            showNoContentView()
-        }
-        
         langsInfo = Constants.getLanguagesInfo()
         if langsInfo.keys.count == 0 {
+            NotificationCenter.default.post(name: Notification.Name("WillFetchLanguagesAPICallIdentifier"), object: nil)
             performGetLangsAPICall()
+        }
+        else
+        {
+            loadAnimation(isLoading: false)
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if langsInfo.keys.count > 0 {
+            if let rowIndex = Array(langsInfo.keys).index(of: Constants.getDefaultLanguageCode()) {
+                self.tableView.scrollToRow(at: IndexPath(row: rowIndex, section: 0), at: .middle, animated: true)
+            }
         }
     }
 
@@ -53,10 +56,6 @@ class TranslatorViewController: BaseContentViewController, UITableViewDataSource
         cell.accessoryType = Array(langsInfo.keys)[indexPath.row] == Constants.getDefaultLanguageCode() ? .checkmark : .disclosureIndicator
         
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
-        return "Change your default language"
     }
     
     // MARK: - TableView Delegate Methods
@@ -83,22 +82,7 @@ class TranslatorViewController: BaseContentViewController, UITableViewDataSource
     
     func loadAnimation(isLoading:Bool = true){
         DispatchQueue.main.async {
-            isLoading ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
-            self.showNoContentView()
-        }
-    }
-    
-    private func showNoContentView(){
-        noContentLabel.isHidden = activityIndicator.isAnimating ? true : (BaseContentViewController.word.hindiTranslation != nil)
-        
-        if !noContentLabel.isHidden{
-            noContentLabel.text = "No \(wordInfoType.getString()) found for \(BaseContentViewController.word.word!)"
-        }
-        
-        textView.isHidden = !noContentLabel.isHidden || activityIndicator.isAnimating
-        yandrexButton.isHidden = textView.isHidden
-        if !textView.isHidden {
-            textView.text = BaseContentViewController.word.hindiTranslation
+            self.tableView.isHidden = isLoading
         }
     }
     
@@ -112,7 +96,7 @@ class TranslatorViewController: BaseContentViewController, UITableViewDataSource
     // MARK: - API calls
     
     func performGetLangsAPICall(){
-        activityIndicator.startAnimating()
+        startAnimation()
         RequestManager().getLangsList() { (success, response) in
             print(response ?? Constants.kErrorMessage)
             DispatchQueue.main.async {
@@ -120,8 +104,9 @@ class TranslatorViewController: BaseContentViewController, UITableViewDataSource
                     self.langsInfo = langsInfo
                     Constants.setLanguagesInfo(languagesInfo: langsInfo)
                     self.tableView.reloadData()
-                    self.activityIndicator.stopAnimating()
                 }
+                self.stopAnimation()
+                NotificationCenter.default.post(name: Notification.Name("DidFetchLanguagesAPICallIdentifier"), object: nil)
             }
         }
     }
