@@ -18,22 +18,25 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     @IBOutlet weak var waterImageView: UIImageView!
     @IBOutlet weak var translationContainerView: UIView!
     @IBOutlet weak var wordContainerView: UIView!
+    @IBOutlet weak var noContentContainerView: UIView!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var translationButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var noContentLabel: UILabel!
     
     var pageControlViewController:UIPageViewController = UIPageViewController.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     var viewControllerList:[UIViewController] = []
-    var selectedPageIndex:Int = 0
+    var selectedPageIndex:Int? = nil
     var shareWord:String? = nil
     let synth = AVSpeechSynthesizer()
     var myUtterance = AVSpeechUtterance(string: "")
-    var arrPageTitle: NSArray = ["Definitions", "Synonyms", "Antonyms", "Examples", "Translator"]
+    var arrPageTitle: NSArray = ["Definitions", "Synonyms", "Antonyms", "Examples"]
     var tempLongitude: Double = -122.02962
     var tempLatitude: Double = 37.332077
     
     private lazy var pageControllerView: UIView = {
-        for index in 0..<arrPageTitle.count {
+        for index in 0...arrPageTitle.count {
             viewControllerList.append(getViewControllerAtIndex(index: index))
         }
         
@@ -79,7 +82,6 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         
         leftBarButton()
         rightBarButton()
-        self.view.isUserInteractionEnabled = false
     }
     
     private func applyPageConstraints() {
@@ -139,6 +141,7 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                     if self.validateStringIsNotUrl(urlString: text){
                         self.shareWord = text
                         self.navigationItem.title = text
+                        self.loadAnimation()
                         self.performTranslationAPICall()
                     }
                     else{
@@ -146,6 +149,36 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                     }
                 })
             }
+        }
+    }
+    
+    func showPageView(state:Bool = true) {
+        
+        UIView.transition(with: view,
+                          duration:0.5,
+                          options: .curveLinear,
+                          animations: {
+                            self.wordContainerView.isHidden = !state
+                            self.pageControllerView.isHidden = !state
+                            self.closeButton.isHidden = !state
+                            self.translationContainerView.isHidden = state
+        },
+                          completion: nil)
+        
+    }
+    
+    func loadAnimation(isLoading:Bool = true){
+        DispatchQueue.main.async {
+            isLoading ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
+            self.showNoContentView()
+        }
+    }
+    
+    private func showNoContentView(){
+        noContentLabel.isHidden = activityIndicator.isAnimating ? true : (BaseContentViewController.word.hindiTranslation != nil)
+        
+        if !noContentLabel.isHidden{
+            noContentLabel.text = "No translation found for \(shareWord!)"
         }
     }
     
@@ -162,41 +195,60 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         for cell in collectionView.visibleCells {
             let wordCollectionViewCell = cell as! WordCollectionViewCell
             let isSelectedCell:Bool = (wordCollectionViewCell.index == selectedPageIndex)
-            wordCollectionViewCell.textLabel.textColor = isSelectedCell ? UIColor.white : UIColor.lightGray
-            wordCollectionViewCell.backgroungTabImageView.image = UIImage(named: isSelectedCell ? "SelectedTab" : "UnSelectedTab")
-            wordCollectionViewCell.textLabel.font = UIFont(name: wordCollectionViewCell.textLabel.font.fontName, size:  isSelectedCell ? 16 : 10)
+            wordCollectionViewCell.textLabel.font = UIFont(name: wordCollectionViewCell.textLabel.font.fontName, size:  isSelectedCell ? 22 : 16)
         }
     }
     
     func getViewControllerAtIndex(index: NSInteger) -> BaseContentViewController{
         // Create a new view controller and pass suitable data.
-        
         var pageContentViewController:BaseContentViewController!
-        if index == (arrPageTitle.count-1){
+        if index == (arrPageTitle.count){
             pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "TranslatorViewController") as! BaseContentViewController
         }
         else{
             pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "PageContentViewController") as! BaseContentViewController
         }
         
-        pageContentViewController.strTitle = "\(arrPageTitle[index])"
         pageContentViewController.pageIndex = index
         pageContentViewController.wordInfoType = index == 0 ? .definitions : index == 1 ? .synonyms : index == 2 ? .antonyms : index == 3 ? .examples : .hindiTranslation
         return pageContentViewController
     }
     
-    func selectPageAtIndex(index:NSInteger)
+    func selectPageAtIndex(index:Int)
     {
         if index < viewControllerList.count{
+            if selectedPageIndex == nil {
+                selectedPageIndex = 0
+            }
             let page = viewControllerList[index]
             weak var pvcw = pageControlViewController
-            pageControlViewController.setViewControllers([page], direction: (selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
+            pageControlViewController.setViewControllers([page], direction: (selectedPageIndex! < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: true) { _ in
                 if let pvcs = pvcw {
                     DispatchQueue.main.async{
-                        pvcs.setViewControllers([page], direction: (self.selectedPageIndex < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: false, completion: nil)
+                        pvcs.setViewControllers([page], direction: (self.selectedPageIndex! < index ? UIPageViewControllerNavigationDirection.forward : UIPageViewControllerNavigationDirection.reverse), animated: false, completion: nil)
                     }
                 }
             }
+            
+            var image: UIImage?
+            switch index {
+            case 0:
+                image = UIImage(named: "definitions_messagebox")
+            case 1:
+                image = UIImage(named: "synonyms_messagebox")
+            case 2:
+                image = UIImage(named: "antonyms_messagebox")
+            case 3:
+                image = UIImage(named: "examples_messagebox")
+            default:
+                image = UIImage(named: "change_language_messagebox")
+            }
+            
+            UIView.transition(with: waterImageView,
+                              duration:0.5,
+                              options: .curveLinear,
+                              animations: { self.waterImageView.image = image },
+                              completion: nil)
         }
     }
     
@@ -258,7 +310,13 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                     BaseContentViewController.word = word
                 }
                 
-                self.view.isUserInteractionEnabled = true
+                UIView.transition(with: self.collectionView,
+                                  duration:0.5,
+                                  options: .curveLinear,
+                                  animations: { self.collectionView.isHidden = false },
+                                  completion: nil)
+                
+                
                 NotificationCenter.default.post(name: Notification.Name("StopAnimationIdentifier"), object: nil)
             }
         }
@@ -275,6 +333,7 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                     self.textView.text = word.hindiTranslation
                 }
                 
+                self.loadAnimation(isLoading: false)
                 self.performAPICall()
                 NotificationCenter.default.post(name: Notification.Name("StopTranslatorAnimationIdentifier"), object: nil)
             }
@@ -292,14 +351,10 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         cell.textLabel.text = arrPageTitle[indexPath.row] as? String
         clearCollectionViewSelection()
         if (indexPath.row == selectedPageIndex){
-            cell.textLabel.textColor = UIColor.white
-            cell.backgroungTabImageView.image = UIImage(named: "SelectedTab")
-            cell.textLabel.font = UIFont(name: cell.textLabel.font.fontName, size: 16)
+            cell.textLabel.font = UIFont(name: cell.textLabel.font.fontName, size: 22)
         }
         else{
-            cell.textLabel.textColor = UIColor.lightGray
-            cell.backgroungTabImageView.image = UIImage(named: "UnSelectedTab")
-            cell.textLabel.font = UIFont(name: cell.textLabel.font.fontName, size: 10)
+            cell.textLabel.font = UIFont(name: cell.textLabel.font.fontName, size: 16)
         }
         return cell
     }
@@ -310,24 +365,32 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
         if(selectedPageIndex != indexPath.item){
             selectPageAtIndex(index: indexPath.item)
             selectedPageIndex = indexPath.item
-            
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             collectionView.reloadData()
-            showPageView()
+            
+            if self.pageControllerView.isHidden {
+                showPageView()
+            }
         }
-    }
-    
-    func showPageView(state:Bool = true) {
-        wordContainerView.isHidden = !state
-        pageControllerView.isHidden = !state
-        closeButton.isHidden = !state
-        translationButton.isHidden = !state
-        translationContainerView.isHidden = state
     }
     
     // MARK: - UICollectionViewDelegateFlowLayout Methods
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.size.width/4, height: 40)
+        let equalWidth: CGFloat = UIScreen.main.bounds.size.width/4
+        let newWidth: CGFloat = UIScreen.main.bounds.size.width/4.5
+        var width = equalWidth
+        
+        if selectedPageIndex != nil && selectedPageIndex != arrPageTitle.count {
+            if selectedPageIndex == indexPath.item {
+                // large size
+                width = UIScreen.main.bounds.size.width - newWidth*3
+            }
+            else {
+                // small size
+                width = newWidth
+            }
+        }
+        
+        return CGSize(width: width, height: 40)
     }
     
     // MARK: - UIPageVieControllerDelegate Methods
@@ -338,7 +401,6 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
                     let indexPath = IndexPath(item: currentVC.pageIndex, section: 0)
                     collectionView.delegate?.collectionView!(collectionView, didSelectItemAt: indexPath)
                     selectedPageIndex = currentVC.pageIndex
-                    
                 }
             }
         }
@@ -364,7 +426,7 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
             return nil;
         }
         index += 1
-        if (index == arrPageTitle.count)
+        if (index > arrPageTitle.count)
         {
             return nil;
         }
@@ -374,9 +436,15 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     // MARK: - IBActions Methods
     @IBAction func closePagesButtonTapped(_ sender: Any) {
         showPageView(state: false)
+        selectedPageIndex = nil
+        self.collectionView.reloadData()
     }
     
     @IBAction func languageButtonTapped(_ sender: Any) {
+        let index:Int = arrPageTitle.count
+        selectPageAtIndex(index: index)
+        selectedPageIndex = index
+        collectionView.reloadData()
     }
     
     @objc func saveButtonTapped(sender: UIBarButtonItem) {

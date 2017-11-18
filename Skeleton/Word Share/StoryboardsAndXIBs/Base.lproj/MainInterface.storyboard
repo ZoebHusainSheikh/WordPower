@@ -306,7 +306,7 @@
                                     <action selector="closePagesButtonTapped:" destination="2SF-az-D58" eventType="touchUpInside" id="Z9C-hJ-jrk"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BcU-sT-FNb" userLabel="LanguageButton">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BcU-sT-FNb" userLabel="LanguageButton">
                                 <rect key="frame" x="327" y="589" width="38" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="38" id="YfY-pN-y4a">
@@ -321,9 +321,36 @@
                                     <action selector="languageButtonTapped:" destination="2SF-az-D58" eventType="touchUpInside" id="dsO-SQ-3Am"/>
                                 </connections>
                             </button>
-                            <collectionView clipsSubviews="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TpK-Zq-1lD">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Gt-45-tTR" userLabel="No Content View">
+                                <rect key="frame" x="52.5" y="160" width="270" height="240"/>
+                                <subviews>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Koa-16-ChI">
+                                        <rect key="frame" x="0.0" y="0.0" width="270" height="240"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="dwj-IM-Eid">
+                                        <rect key="frame" x="116.5" y="101.5" width="37" height="37"/>
+                                        <color key="color" red="0.1707260609" green="0.75761073830000003" blue="0.52332139020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="dwj-IM-Eid" firstAttribute="centerX" secondItem="5Gt-45-tTR" secondAttribute="centerX" id="3lp-Ye-u8o"/>
+                                    <constraint firstAttribute="bottom" secondItem="Koa-16-ChI" secondAttribute="bottom" id="Igw-sk-vdB"/>
+                                    <constraint firstItem="Koa-16-ChI" firstAttribute="top" secondItem="5Gt-45-tTR" secondAttribute="top" id="KDf-G5-Z4b"/>
+                                    <constraint firstAttribute="height" constant="240" id="PoA-o0-oMm"/>
+                                    <constraint firstAttribute="width" constant="270" id="WH1-so-SdL"/>
+                                    <constraint firstAttribute="trailing" secondItem="Koa-16-ChI" secondAttribute="trailing" id="dnf-n0-PKG"/>
+                                    <constraint firstItem="dwj-IM-Eid" firstAttribute="centerY" secondItem="5Gt-45-tTR" secondAttribute="centerY" id="fUc-To-zE4"/>
+                                    <constraint firstItem="Koa-16-ChI" firstAttribute="leading" secondItem="5Gt-45-tTR" secondAttribute="leading" id="vVA-zT-yWD"/>
+                                </constraints>
+                            </view>
+                            <collectionView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TpK-Zq-1lD">
                                 <rect key="frame" x="0.0" y="627" width="375" height="40"/>
-                                <color key="backgroundColor" red="0.89351505040000001" green="0.91400539879999998" blue="0.90567952389999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="3nR-SX-Tfr"/>
                                 </constraints>
@@ -341,30 +368,24 @@
                                             <rect key="frame" x="0.0" y="0.0" width="81" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SelectedTab" translatesAutoresizingMaskIntoConstraints="NO" id="dlc-vp-9og">
-                                                    <rect key="frame" x="0.0" y="0.0" width="81" height="40"/>
-                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZRb-xr-Kj8">
                                                     <rect key="frame" x="0.0" y="0.0" width="81" height="40"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
-                                                    <color key="textColor" red="0.1707260609" green="0.75761073830000003" blue="0.52332139020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="ZRb-xr-Kj8" firstAttribute="leading" secondItem="n07-o6-Zja" secondAttribute="leading" id="ToI-tK-7Wk"/>
-                                            <constraint firstAttribute="trailing" secondItem="dlc-vp-9og" secondAttribute="trailing" id="UVR-db-CGF"/>
                                             <constraint firstItem="ZRb-xr-Kj8" firstAttribute="top" secondItem="n07-o6-Zja" secondAttribute="top" id="YXu-hQ-6dV"/>
-                                            <constraint firstItem="dlc-vp-9og" firstAttribute="top" secondItem="n07-o6-Zja" secondAttribute="top" id="g8x-CI-TVt"/>
                                             <constraint firstAttribute="bottom" secondItem="ZRb-xr-Kj8" secondAttribute="bottom" id="gEj-sr-fh4"/>
-                                            <constraint firstAttribute="bottom" secondItem="dlc-vp-9og" secondAttribute="bottom" id="k0Y-UB-IZl"/>
-                                            <constraint firstItem="dlc-vp-9og" firstAttribute="leading" secondItem="n07-o6-Zja" secondAttribute="leading" id="uJk-dy-NRa"/>
                                             <constraint firstAttribute="trailing" secondItem="ZRb-xr-Kj8" secondAttribute="trailing" id="xeB-nb-C00"/>
                                         </constraints>
                                         <viewLayoutGuide key="safeArea" id="zzM-Y1-N7M"/>
                                         <connections>
-                                            <outlet property="backgroungTabImageView" destination="dlc-vp-9og" id="tcl-wM-e9O"/>
                                             <outlet property="textLabel" destination="ZRb-xr-Kj8" id="TTv-dZ-W9K"/>
                                         </connections>
                                     </collectionViewCell>
@@ -377,7 +398,9 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="5Gt-45-tTR" firstAttribute="centerX" secondItem="Bd5-YD-K2I" secondAttribute="centerX" id="0ZK-kb-qXH"/>
                             <constraint firstItem="TpK-Zq-1lD" firstAttribute="top" secondItem="Bd5-YD-K2I" secondAttribute="bottom" id="2Zn-zO-nWR"/>
+                            <constraint firstItem="5Gt-45-tTR" firstAttribute="top" secondItem="Bd5-YD-K2I" secondAttribute="top" id="36D-ZM-53Z"/>
                             <constraint firstItem="Bd5-YD-K2I" firstAttribute="trailing" secondItem="2RW-eD-tZK" secondAttribute="trailing" id="3bp-Rz-BWV"/>
                             <constraint firstItem="8Y7-qj-5c3" firstAttribute="top" secondItem="2RW-eD-tZK" secondAttribute="top" constant="64" id="6PO-4T-kML"/>
                             <constraint firstItem="2RW-eD-tZK" firstAttribute="trailing" secondItem="Kzs-7y-pVM" secondAttribute="trailing" id="9aE-Yi-TPk"/>
@@ -399,9 +422,12 @@
                         <viewLayoutGuide key="safeArea" id="2RW-eD-tZK"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="dwj-IM-Eid" id="dAb-vG-34a"/>
                         <outlet property="backgroundImageView" destination="Kzs-7y-pVM" id="sTf-eS-AOZ"/>
                         <outlet property="closeButton" destination="Yek-02-bmZ" id="vgC-V9-etk"/>
                         <outlet property="collectionView" destination="TpK-Zq-1lD" id="I4W-9y-JBL"/>
+                        <outlet property="noContentContainerView" destination="5Gt-45-tTR" id="en9-Xn-PRB"/>
+                        <outlet property="noContentLabel" destination="Koa-16-ChI" id="Fs5-AZ-IHk"/>
                         <outlet property="textView" destination="tiu-WW-nNV" id="s1q-NT-t1u"/>
                         <outlet property="translationButton" destination="BcU-sT-FNb" id="1xG-DM-tV3"/>
                         <outlet property="translationContainerView" destination="Bd5-YD-K2I" id="3kF-gO-3ah"/>
@@ -415,7 +441,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="SelectedTab" width="151" height="41"/>
         <image name="books_icon" width="359" height="148"/>
         <image name="change_language_icon" width="38" height="38"/>
         <image name="change_language_messagebox" width="365" height="525"/>

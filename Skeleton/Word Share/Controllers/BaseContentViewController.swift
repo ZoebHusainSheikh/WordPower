@@ -12,7 +12,6 @@ class BaseContentViewController: UIViewController {
 
     static var word:WordModel = WordModel()
     var pageIndex: Int = 0
-    var strTitle: String!
     var wordInfoType:WordInfoType = .definitions
     
     override func viewDidLoad() {
