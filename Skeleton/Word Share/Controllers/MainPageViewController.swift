@@ -188,9 +188,9 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     }
     
     private func showNoContentView(){
-        noContentLabel.isHidden = activityIndicator.isAnimating ? true : (BaseContentViewController.word.hindiTranslation != nil)
+        noContentContainerView.isHidden = activityIndicator.isAnimating ? true : (BaseContentViewController.word.hindiTranslation != nil)
         
-        if !noContentLabel.isHidden{
+        if !noContentContainerView.isHidden{
             noContentLabel.text = "No translation found for \"\(shareWord!)\""
         }
     }

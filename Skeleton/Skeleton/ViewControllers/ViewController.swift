@@ -11,13 +11,16 @@ import Speech
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, SFSpeechRecognizerDelegate {
     
-    @IBOutlet weak var speechButton: UIButton!
+    var speechButton: UIBarButtonItem!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var noContentLabel: UILabel!
-    @IBOutlet weak var yandrexButton: UIButton!
+    @IBOutlet weak var translationContainerView: UIView!
+    @IBOutlet weak var wordContainerView: UIView!
+    @IBOutlet weak var noContentContainerView: UIView!
+    @IBOutlet weak var closeButton: UIButton!
     
     // MARK: Translation variables
     var hindiTranslation:String?
@@ -33,13 +36,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        langsInfo = Constants.getLanguagesInfo()
-        if langsInfo.keys.count == 0 {
-            self.tableView.isHidden = true
-            performGetLangsAPICall()
-        }
-        self.requestSpeechAuthorization()
+        initialSetup()
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,12 +75,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // MARK: - Private Methods
     
-    @objc func stopAnimation(){
-        loadAnimation(isLoading: false)
+    private func initialSetup() {
+        navigationController?.navigationBar.barTintColor = UIColor.black
+        leftBarButton()
+        rightBarButton()
+        langsInfo = Constants.getLanguagesInfo()
+        if langsInfo.keys.count == 0 {
+            self.tableView.isHidden = true
+            performGetLangsAPICall()
+        }
+        self.requestSpeechAuthorization()
     }
     
-    @objc func startAnimation(){
-        loadAnimation()
+    func showPageView(state:Bool = true) {
+        
+        UIView.transition(with: view,
+                          duration:0.5,
+                          options: .curveLinear,
+                          animations: {
+                            self.wordContainerView.isHidden = !state
+                            self.closeButton.isHidden = !state
+                            self.translationContainerView.isHidden = state
+        },
+                          completion: nil)
+        
     }
     
     func loadAnimation(isLoading:Bool = true){
@@ -93,15 +108,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    @objc func stopAnimation(){
+        loadAnimation(isLoading: false)
+    }
+    
+    @objc func startAnimation(){
+        loadAnimation()
+    }
+    
     private func showNoContentView(){
-        noContentLabel.isHidden = activityIndicator.isAnimating ? true : hindiTranslation != nil
+        noContentContainerView.isHidden = activityIndicator.isAnimating ? true : hindiTranslation != nil
         
-        if !noContentLabel.isHidden{
+        if !noContentContainerView.isHidden{
             noContentLabel.text = "No translation found for " + textField.text!
         }
         
-        textView.isHidden = !noContentLabel.isHidden || activityIndicator.isAnimating
-        yandrexButton.isHidden = textView.isHidden
+        textView.isHidden = !noContentContainerView.isHidden || activityIndicator.isAnimating
         if !textView.isHidden {
             textView.text = hindiTranslation
         }
@@ -154,7 +176,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
                 if lastString.capitalized == "Done"{
                     self.textField.text = ""
-                    self.speechButtonTapped(self.speechButton)
+                    self.speechButtonTapped(sender: self.speechButton)
                 }
                 else {
                     self.textField.text = bestString
@@ -183,6 +205,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.request = SFSpeechAudioBufferRecognitionRequest()
             }
         }
+    }
+    
+    private func leftBarButton(){
+        let button = UIButton.init(type: .custom)
+        button.setImage(UIImage.init(named: "change_language_icon"), for: UIControlState.normal)
+        button.addTarget(self, action:#selector(ViewController.languageButtonTapped(sender:)), for:.touchUpInside)
+        button.frame = CGRect.init(x: 0, y: 0, width: 38, height: 38)
+        let barButton = UIBarButtonItem.init(customView: button)
+        self.navigationItem.leftBarButtonItem = barButton
+    }
+    
+    private func rightBarButton(){
+        let button = UIButton.init(type: .custom)
+        button.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
+        button.addTarget(self, action:#selector(ViewController.speechButtonTapped(sender:)), for:.touchUpInside)
+        button.frame = CGRect.init(x: 0, y: 0, width: 38, height: 30)
+        speechButton = UIBarButtonItem.init(customView: button)
+        self.navigationItem.rightBarButtonItem = speechButton
     }
     
     //MARK: - Check Authorization Status
@@ -217,24 +257,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool{
         cancelRecording()
-        speechButton.isSelected = false
+        (speechButton.customView as! UIButton).isSelected = false
         return true
     }
     
-    // MARK: - IBActions
-    
-    @IBAction func yandrexButtonTapped(_ sender: Any) {
-        let url = NSURL(string: "http://translate.yandex.com/")! as URL
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    // MARK: - IBActions Methods
+    @IBAction func closePagesButtonTapped(_ sender: Any) {
+        showPageView(state: false)
     }
     
-    @IBAction func speechButtonTapped(_ sender: UIButton) {
-        if sender.isSelected {
+    @objc func languageButtonTapped(sender: UIBarButtonItem) {
+        if self.wordContainerView.isHidden {
+            showPageView()
+        }
+    }
+    
+    @objc func speechButtonTapped(sender: UIBarButtonItem) {
+        if (sender.customView as! UIButton).isSelected {
             cancelRecording()
-            sender.isSelected = false
+            (sender.customView as! UIButton).isSelected = false
         } else {
             self.recordAndRecognizeSpeech()
-            sender.isSelected = true
+            (sender.customView as! UIButton).isSelected = true
         }
     }
     
