@@ -11,7 +11,7 @@ import Speech
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, SFSpeechRecognizerDelegate {
     
-    var speechButton: UIBarButtonItem!
+    var speechButton: UIButton!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var tableView: UITableView!
@@ -38,7 +38,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         initialSetup()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -58,10 +58,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
-        return "Change your default language"
-    }
-    
     // MARK: - TableView Delegate Methods
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
@@ -69,6 +65,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let value:String = Array(langsInfo.keys)[indexPath.row]
         Constants.setDefaultLanguageCode(language:value)
+        showPageView(state: false)
         performTranslationAPICall()
         tableView.reloadData()
     }
@@ -76,6 +73,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Private Methods
     
     private func initialSetup() {
+        textView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.new, context: nil)
         navigationController?.navigationBar.barTintColor = UIColor.black
         leftBarButton()
         rightBarButton()
@@ -87,7 +85,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.requestSpeechAuthorization()
     }
     
-    func showPageView(state:Bool = true) {
+    private func showPageView(state:Bool = true) {
         
         UIView.transition(with: view,
                           duration:0.5,
@@ -101,32 +99,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-    func loadAnimation(isLoading:Bool = true){
+    private func loadAnimation(isLoading:Bool = true){
         DispatchQueue.main.async {
             isLoading ? self.activityIndicator.startAnimating() : self.activityIndicator.stopAnimating()
             self.showNoContentView()
         }
     }
     
-    @objc func stopAnimation(){
-        loadAnimation(isLoading: false)
-    }
-    
-    @objc func startAnimation(){
-        loadAnimation()
-    }
-    
     private func showNoContentView(){
-        noContentContainerView.isHidden = activityIndicator.isAnimating ? true : hindiTranslation != nil
+        noContentLabel.isHidden = activityIndicator.isAnimating ? true : hindiTranslation != nil
         
-        if !noContentContainerView.isHidden{
-            noContentLabel.text = "No translation found for " + textField.text!
+        if !noContentLabel.isHidden{
+            noContentLabel.text = "No translation found for \"\(textField.text!)\""
         }
         
-        textView.isHidden = !noContentContainerView.isHidden || activityIndicator.isAnimating
+        textView.isHidden = !noContentLabel.isHidden || activityIndicator.isAnimating
         if !textView.isHidden {
             textView.text = hindiTranslation
         }
+        
+        noContentContainerView.isHidden = !textView.isHidden
     }
     
     private func startTimer(){
@@ -142,7 +134,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func recordAndRecognizeSpeech(){
+    private func recordAndRecognizeSpeech(){
         let node = audioEngine.inputNode
         let recordingFormat = node.outputFormat(forBus: 0)
         node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
@@ -176,7 +168,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
                 if lastString.capitalized == "Done"{
                     self.textField.text = ""
-                    self.speechButtonTapped(sender: self.speechButton)
+                    self.speechButtonTapped(sender:nil)
                 }
                 else {
                     self.textField.text = bestString
@@ -186,13 +178,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
                 
             } else if let error = error {
-//                self.sendAlert(message: "There has been a speech recognition error.")
                 print(error)
             }
         })
     }
     
-    func cancelRecording() {
+    private func cancelRecording() {
         DispatchQueue.main.async {
             if(self.audioEngine.isRunning){
                 let node = self.audioEngine.inputNode
@@ -217,17 +208,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     private func rightBarButton(){
-        let button = UIButton.init(type: .custom)
-        button.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
-        button.addTarget(self, action:#selector(ViewController.speechButtonTapped(sender:)), for:.touchUpInside)
-        button.frame = CGRect.init(x: 0, y: 0, width: 38, height: 30)
-        speechButton = UIBarButtonItem.init(customView: button)
-        self.navigationItem.rightBarButtonItem = speechButton
+        speechButton = UIButton.init(type: .custom)
+        speechButton.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
+        speechButton.addTarget(self, action:#selector(ViewController.speechButtonTapped(sender:)), for:.touchUpInside)
+        speechButton.frame = CGRect.init(x: 0, y: 0, width: 38, height: 30)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: speechButton)
+    }
+    
+    //MARK: - Alert
+    
+    private func sendAlert(message: String) {
+        let alert = UIAlertController(title: "Speech Recognizer Error", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     //MARK: - Check Authorization Status
     
-    func requestSpeechAuthorization() {
+    private func requestSpeechAuthorization() {
         SFSpeechRecognizer.requestAuthorization { authStatus in
             OperationQueue.main.addOperation {
                 switch authStatus {
@@ -257,7 +255,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool{
         cancelRecording()
-        (speechButton.customView as! UIButton).isSelected = false
+        speechButton.isSelected = false
         return true
     }
     
@@ -268,23 +266,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @objc func languageButtonTapped(sender: UIBarButtonItem) {
         if self.wordContainerView.isHidden {
+            textField.resignFirstResponder()
             showPageView()
         }
     }
     
-    @objc func speechButtonTapped(sender: UIBarButtonItem) {
-        if (sender.customView as! UIButton).isSelected {
+    @objc func speechButtonTapped(sender: UIBarButtonItem?) {
+        if self.speechButton.isSelected {
             cancelRecording()
-            (sender.customView as! UIButton).isSelected = false
+            speechButton.isSelected = false
         } else {
             self.recordAndRecognizeSpeech()
-            (sender.customView as! UIButton).isSelected = true
+            speechButton.isSelected = true
         }
     }
     
     // MARK: - API calls
     
-    func performGetLangsAPICall(){
+    private func performGetLangsAPICall(){
         activityIndicator.startAnimating()
         RequestManager().getLangsList() { (success, response) in
             print(response ?? Constants.kErrorMessage)
@@ -302,7 +301,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @objc func performTranslationAPICall(){
         if (textField.text?.count)! > 0 {
-            startAnimation()
+            loadAnimation()
             RequestManager().getTranslationInformation(word: textField.text!) { (success, response) in
                 print(response ?? Constants.kErrorMessage)
                 // Notify translator controller
@@ -310,19 +309,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     if let word = response as? String{
                         self.hindiTranslation = word
                     }
-                    self.stopAnimation()
+                    self.loadAnimation(isLoading: false)
                 }
             }
         }
     }
-
     
-    //MARK: - Alert
+    // MARK: - Observer Methods
     
-    func sendAlert(message: String) {
-        let alert = UIAlertController(title: "Speech Recognizer Error", message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+    // Force the text in a UITextView to always center itself.
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        let textView = object as! UITextView
+        var topCorrect = (textView.bounds.size.height - textView.contentSize.height * textView.zoomScale) / 2
+        topCorrect = topCorrect < 0.0 ? 0.0 : topCorrect;
+        textView.contentInset.top = topCorrect
     }
 }
 

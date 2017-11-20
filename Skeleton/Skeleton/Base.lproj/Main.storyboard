@@ -46,7 +46,7 @@
                                     </label>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OAp-hI-vci">
                                         <rect key="frame" x="20" y="73" width="335" height="366"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TitleCellIdentifier" textLabel="wlg-63-Gqz" rowHeight="50" style="IBUITableViewCellStyleDefault" id="72m-84-pRN" customClass="ContentTableViewCell" customModule="WordPower" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="28" width="335" height="50"/>
@@ -63,7 +63,9 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </tableViewCellContentView>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <connections>
                                                     <outlet property="titleLabel" destination="wlg-63-Gqz" id="Jci-0W-0rz"/>
                                                 </connections>
@@ -100,7 +102,7 @@
                                             <constraint firstAttribute="width" constant="361" id="igT-zl-pIq"/>
                                         </constraints>
                                     </imageView>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Wyu-VQ-lId">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Wyu-VQ-lId">
                                         <rect key="frame" x="57.5" y="40" width="260" height="160"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -132,7 +134,7 @@
                                     <constraint firstItem="Rj2-BZ-NOx" firstAttribute="centerX" secondItem="dE6-nt-aN0" secondAttribute="centerX" id="rNS-BH-Q6t"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yam-Yb-7c5" userLabel="No Content View">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yam-Yb-7c5" userLabel="No Content View">
                                 <rect key="frame" x="52" y="160" width="270" height="240"/>
                                 <subviews>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eE6-8h-O0c">
@@ -142,7 +144,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="bFj-Yf-uns">
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="bFj-Yf-uns">
                                         <rect key="frame" x="116.5" y="101.5" width="37" height="37"/>
                                         <color key="color" red="0.83258122209999996" green="0.20958483219999999" blue="0.091663889590000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </activityIndicatorView>
@@ -193,7 +195,7 @@
                     <navigationItem key="navigationItem" id="1wO-hZ-Ntj">
                         <nil key="title"/>
                         <textField key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" id="Wre-yb-7lw">
-                            <rect key="frame" x="35.5" y="7" width="304" height="30"/>
+                            <rect key="frame" x="36" y="7" width="304" height="30"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <nil key="textColor"/>
                             <fontDescription key="fontDescription" name="Abel-Regular" family="Abel" pointSize="17"/>

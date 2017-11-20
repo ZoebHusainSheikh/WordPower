@@ -177,22 +177,26 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     
     @objc func showAnimation(){
         DispatchQueue.main.async {
+            self.noContentContainerView.isHidden = false
             self.activityIndicator.startAnimating()
         }
     }
     
     @objc func hideAnimation(){
         DispatchQueue.main.async {
+            self.noContentContainerView.isHidden = true
             self.activityIndicator.stopAnimating()
         }
     }
     
     private func showNoContentView(){
-        noContentContainerView.isHidden = activityIndicator.isAnimating ? true : (BaseContentViewController.word.hindiTranslation != nil)
+        noContentLabel.isHidden = activityIndicator.isAnimating ? true : (BaseContentViewController.word.hindiTranslation != nil)
         
-        if !noContentContainerView.isHidden{
+        if !noContentLabel.isHidden{
             noContentLabel.text = "No translation found for \"\(shareWord!)\""
         }
+        
+       noContentContainerView.isHidden = !activityIndicator.isAnimating && noContentLabel.isHidden
     }
     
     func validateStringIsNotUrl (urlString: String) -> Bool {
