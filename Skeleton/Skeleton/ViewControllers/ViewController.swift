@@ -32,6 +32,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var request = SFSpeechAudioBufferRecognitionRequest()
     var recognitionTask: SFSpeechRecognitionTask?
     var timer:Timer?
+    var micTimer:Timer?
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -140,6 +141,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    private func startMicTimer(){
+        stopMicTimer();
+        micTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(finishSpeechRecognition), userInfo: nil, repeats: false)
+    }
+    
+    private func stopMicTimer(){
+        if (micTimer != nil)
+        {
+            micTimer?.invalidate()
+            self.micTimer = nil;
+        }
+    }
+    
     private func recordAndRecognizeSpeech(){
         let node = audioEngine.inputNode
         let recordingFormat = node.outputFormat(forBus: 0)
@@ -164,24 +178,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         recognitionTask = speechRecognizer?.recognitionTask(with: request, resultHandler: { result, error in
             if let result = result {
-                
                 let bestString = result.bestTranscription.formattedString
+                self.textField.text = bestString
                 
-                var lastString: String = ""
-                for segment in result.bestTranscription.segments {
-                    let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
-                    lastString = String(bestString[indexTo...])
-                }
-                if lastString.capitalized == "Done"{
-                    self.textField.text = ""
-                    self.speechButtonTapped(sender:nil)
-                }
-                else {
-                    self.textField.text = bestString
-                    
-                    //perform API call after few sec
-                    self.startTimer()
-                }
+                //perform API call after few sec
+                self.startTimer()
                 
             } else if let error = error {
                 print(error)
@@ -216,9 +217,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private func rightBarButton(){
         speechButton = UIButton.init(type: .custom)
         speechButton.setImage(UIImage.init(named: "mic_off"), for: UIControlState.normal)
+        speechButton.setImage(UIImage.init(named: "mic_on"), for: UIControlState.selected)
         speechButton.addTarget(self, action:#selector(ViewController.speechButtonTapped(sender:)), for:.touchUpInside)
         speechButton.frame = CGRect.init(x: 0, y: 0, width: 24, height: 36)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: speechButton)
+    }
+    
+    private func beginSpeechRecognition() {
+        print("begin")
+        if !self.speechButton.isSelected {
+            self.recordAndRecognizeSpeech()
+            speechButton.isSelected = true
+            startMicTimer()
+        }
+    }
+    
+    @objc private func finishSpeechRecognition() {
+        print("released")
+        if self.speechButton.isSelected {
+            cancelRecording()
+            speechButton.isSelected = false
+            stopMicTimer()
+        }
     }
     
     //MARK: - Alert
@@ -264,8 +284,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool{
-        cancelRecording()
-        speechButton.isSelected = false
+        finishSpeechRecognition()
         return true
     }
     
@@ -291,11 +310,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @objc func speechButtonTapped(sender: UIBarButtonItem?) {
         if self.speechButton.isSelected {
-            cancelRecording()
-            speechButton.isSelected = false
-        } else {
-            self.recordAndRecognizeSpeech()
-            speechButton.isSelected = true
+            finishSpeechRecognition()
+        }
+        else {
+            beginSpeechRecognition()
         }
     }
     
