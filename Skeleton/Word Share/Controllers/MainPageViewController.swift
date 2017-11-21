@@ -155,14 +155,34 @@ class MainPageViewController: UIViewController, UIPageViewControllerDataSource, 
     
     func showPageView(state:Bool = true) {
         
+        // instantaneously make the image view small (scaled to 1% of its actual size)
+        if state {
+            wordContainerView.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
+            closeButton.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
+            self.pageControllerView.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
+        }
+        else {
+            translationContainerView.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
+        }
+        
         UIView.transition(with: view,
                           duration:0.5,
-                          options: .curveLinear,
+                          options: .curveEaseOut,
                           animations: {
                             self.wordContainerView.isHidden = !state
                             self.pageControllerView.isHidden = !state
                             self.closeButton.isHidden = !state
                             self.translationContainerView.isHidden = state
+                            
+                            if state {
+                                self.wordContainerView.transform = .identity
+                                self.closeButton.transform = .identity
+                                self.pageControllerView.transform = .identity
+                            }
+                            else {
+                                self.translationContainerView.transform = .identity
+                                
+                            }
         },
                           completion: nil)
         
