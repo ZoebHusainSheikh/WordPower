@@ -143,7 +143,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     private func startMicTimer(){
         stopMicTimer();
-        micTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(finishSpeechRecognition), userInfo: nil, repeats: false)
+        micTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(finishSpeechRecognition), userInfo: nil, repeats: false)
     }
     
     private func stopMicTimer(){
