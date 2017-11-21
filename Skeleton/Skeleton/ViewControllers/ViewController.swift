@@ -44,6 +44,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Dispose of any resources that can be recreated.
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
     // MARK: - TableView DataSource Methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -63,6 +67,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         tableView.deselectRow(at: indexPath, animated: true)
         
+        textField.resignFirstResponder()
         let value:String = Array(langsInfo.keys)[indexPath.row]
         Constants.setDefaultLanguageCode(language:value)
         showPageView(state: false)
@@ -73,6 +78,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - Private Methods
     
     private func initialSetup() {
+        self.tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         textView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.new, context: nil)
         navigationController?.navigationBar.barTintColor = UIColor.black
         leftBarButton()
@@ -200,18 +206,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     private func leftBarButton(){
         let button = UIButton.init(type: .custom)
-        button.setImage(UIImage.init(named: "change_language_icon"), for: UIControlState.normal)
+        button.setImage(UIImage.init(named: "language_icon"), for: UIControlState.normal)
         button.addTarget(self, action:#selector(ViewController.languageButtonTapped(sender:)), for:.touchUpInside)
-        button.frame = CGRect.init(x: 0, y: 0, width: 38, height: 38)
+        button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 32)
         let barButton = UIBarButtonItem.init(customView: button)
         self.navigationItem.leftBarButtonItem = barButton
     }
     
     private func rightBarButton(){
         speechButton = UIButton.init(type: .custom)
-        speechButton.setImage(UIImage.init(named: "speaker"), for: UIControlState.normal)
+        speechButton.setImage(UIImage.init(named: "mic_off"), for: UIControlState.normal)
         speechButton.addTarget(self, action:#selector(ViewController.speechButtonTapped(sender:)), for:.touchUpInside)
-        speechButton.frame = CGRect.init(x: 0, y: 0, width: 38, height: 30)
+        speechButton.frame = CGRect.init(x: 0, y: 0, width: 24, height: 36)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: speechButton)
     }
     
@@ -247,6 +253,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // MARK: - UITextField Delegate Methods
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        showPageView(state: false)
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         performTranslationAPICall()
         self.textField.resignFirstResponder()
@@ -268,6 +278,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if self.wordContainerView.isHidden {
             textField.resignFirstResponder()
             showPageView()
+            if langsInfo.keys.count > 0 {
+                if let rowIndex = Array(langsInfo.keys).index(of: Constants.getDefaultLanguageCode()) {
+                    self.tableView.scrollToRow(at: IndexPath(row: rowIndex, section: 0), at: .middle, animated: true)
+                }
+            }
+        }
+        else{
+            showPageView(state: false)
         }
     }
     
