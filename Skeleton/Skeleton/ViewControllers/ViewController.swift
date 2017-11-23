@@ -46,7 +46,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
+        self.textField.resignFirstResponder()
     }
     
     // MARK: - TableView DataSource Methods
@@ -292,7 +292,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - UITextField Delegate Methods
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        showPageView(state: false)
+        if self.translationContainerView.isHidden {
+            showPageView(state: false)
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
